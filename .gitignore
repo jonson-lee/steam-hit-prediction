@@ -1,0 +1,14 @@
+# 数据不入库：体积大，队友各自从 Kaggle 下载
+data/
+*.csv
+
+# Python / Jupyter
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# 日志
+*.log
