@@ -1,6 +1,6 @@
 # Steam 游戏爆款预测
 
-课程项目（IBA6102 Machine Learning for Business，CUHK-Shenzhen）
+课程项目（Machine Learning for Business，CUHK-Shenzhen）
 
 **问题**：中小型发行商如何用"发售前可得的信息"判断一款 Steam 游戏能否成为爆款，从而决定预算投向。
 
@@ -11,13 +11,13 @@
 ## 仓库结构
 
 ```
-data/                          # 数据目录（不入库，见下方说明）
-Project_Proposal_Steam_Game_Success.md   # 提案：商业问题 / 标签定义 / A-B 字段划分
-EDA_Steam.ipynb                # EDA：字段核对、清洗、标签不平衡度摸底
+data/                          # 数据目录
+Project_Proposal_Steam_Game_Success.md   # 提案
+EDA_Steam.ipynb                # EDA
 JOURNAL.md                     # 更新日记
 ```
 
-## 数据准备（克隆后第一步）
+## 数据准备
 
 本仓库用 `.gitignore` 排除了数据文件，克隆后请自行准备数据：
 
@@ -35,6 +35,6 @@ JOURNAL.md                     # 更新日记
 
 ## 协作约定
 
-- 直接 push 到 `main`（小组规模小）；大改动建议先开 Issue 讨论
+- 直接 push 到 `main`
 - 每人更新 `JOURNAL.md` 记录进展；结论性发现同步更新提案
 - 图表、结论产出到 `notebooks/`（后面加）
