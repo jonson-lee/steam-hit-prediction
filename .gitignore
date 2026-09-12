@@ -1,14 +1,23 @@
-# 数据不入库：体积大，队友各自从 Kaggle 下载
-data/
+# Raw third-party data stays local. Keep provenance and audit results in version control.
+data/raw/
 *.csv
 
-# Python / Jupyter
+# Notebook and Python runtime files
 .ipynb_checkpoints/
 __pycache__/
-*.pyc
-
-# macOS
+*.py[cod]
 .DS_Store
-
-# 日志
 *.log
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.token
+credentials*.json
+secrets*.json
+
+# Local handoff archive; source files are tracked directly.
+project_6102.zip
