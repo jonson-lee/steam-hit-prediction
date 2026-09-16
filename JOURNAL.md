@@ -22,7 +22,7 @@
 - [ ] 按已锁定标签与时间切分重构 EDA notebook
 - [ ] 建立规则、Logistic Regression 和一个树集成模型的统一流水线
 
-## 2026-09-09 - Waylen
+## 2026-09-09 - Project Team
 - 定题：Steam 游戏爆款预测（发行商预算分配决策）
 - 团队 7 人组队完成
 - 数据下载完毕：steam.csv（27,075 × 18）等 6 个文件
