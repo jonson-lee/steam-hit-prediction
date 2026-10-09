@@ -1,119 +1,69 @@
-# Steam Game Hit Prediction
+# Steam Game Hit Prediction | Steam 游戏爆款预测
 
-> Screening candidate games for a small or medium-sized publisher.
-> IBA6102 Machine Learning for Business — group project.
->
-> 面向中小型发行商的 Steam 游戏爆款筛选模型。IBA6102《商业机器学习》小组课程项目。
+IBA6102 Machine Learning for Business 小组项目，面向中小发行商的候选游戏筛选和排序。
 
----
+**Current standard: v1.1, frozen on 2026-09-24.** The meeting decisions were adopted as the project authority on 2026-10-09. The executable design is defined in `config.py`.
 
-## Overview | 项目概述
+**当前标准：2026-09-24 会议冻结的 v1.1。** 用户于 2026-10-09 指定会议决议为当前标准，并授权同步本地与云端。六表验收与 v1.1 厂商规则复现已完成；STEP1 OUTPUT 已审查，当前主模型接口与正式 ML 流水线待完成。
 
-**EN** — A small or medium-sized publisher has more candidate games than it can fund, so it needs a
-pre-release screening score to rank candidates for deeper due diligence and budget allocation.
-This project estimates whether a candidate game is likely to enter the high-traction group among
-games released in the same calendar year. It is a decision-support tool, not an automatic green-light
-system.
+## Standard and evidence | 标准与证据
 
-**中文** — 中小型发行商可选的游戏数量远超其能投入发行/代理的项目，因此需要在**发售前**用一个筛选
-分数对候选游戏排序，以便安排有限的尽调与预算。本项目预测一款候选游戏能否进入"同年发行游戏中的高热度
-组"。它是决策支持工具，不是自动放行系统。
-
----
-
-## Data and license | 数据与许可
-
-- **Source:** Nik Davis, *Steam Store Games (Clean dataset)* — combining Steam Store and SteamSpy API data.
-- **License:** CC BY 4.0.
-- **Shape:** six CSV files; main table 27,075 games × 18 columns; snapshot collected around May 2019.
-- **Access:** raw CSVs are **not** committed. Download from Kaggle and place them under
-  `data/raw/steam_store_games/` before running the validator.
-- Provenance, inventory, and licensing notes live in `data/README.md`; formal acceptance evidence
-  lives in `docs/DATA_AUDIT.md`.
-
-> 原始 CSV 不入库，需自行从 Kaggle 下载到 `data/raw/steam_store_games/`。数据来源、清单与许可说明见
-> `data/README.md`，正式验收证据见 `docs/DATA_AUDIT.md`。
-
----
-
-## Repository structure | 仓库结构
-
-```
-data/
-  README.md                      # data provenance, inventory, license, usage contract
-  raw/                           # raw CSVs (git-ignored, local only)
-  audit/                         # machine-readable audit JSON (local)
-docs/
-  DATA_AUDIT.md                  # formal data acceptance evidence
-scripts/
-  validate_steam_data.py         # reproducible full-data validator
-EDA_Steam.ipynb                  # exploratory analysis (to be rebuilt on the locked design)
-Project_Proposal_Steam_Game_Success.md  # proposal: business problem, labels, A/B field split
-CHANGELOG.md                     # material changes over time
-JOURNAL.md                       # short progress log
-requirements.txt                 # runtime dependencies
-```
-
----
-
-## Method and label policy | 方法与标签口径
-
-- **Primary target:** `hit_reviews = 1` when total rating count
-  (`positive_ratings + negative_ratings`) is at or above the 90th percentile within its release-year
-  cohort; otherwise 0. The incomplete 2019 cohort is excluded.
-- **Time split:** train ≤ 2016, validation 2017, final test 2018. Random splitting is prohibited.
-- **Forbidden predictors (leakage):** `positive_ratings`, `negative_ratings`, `owners`,
-  `average_playtime`, `median_playtime`, and all SteamSpy tag / tag-vote columns.
-- **Snapshot-only sensitivity features:** `price`, `achievements`, descriptions, requirements,
-  support info, and media-derived features.
-- **Evaluation:** Average Precision / PR-AUC, ROC-AUC, and precision / recall / lift among the top 10%
-  of scored candidates. Accuracy is not a primary metric.
-
-> 主标签为"同年发行游戏总评价数 ≥ 90 分位"，排除 2019；时间切分 ≤2016 / 2017 / 2018；评价数、销量、
-> 游玩时长与 SteamSpy 标签一律禁止作为特征（防泄漏）。
-
----
-
-## Setup and reproducibility | 环境与复现
-
-```powershell
-python -m pip install -r requirements.txt
-python .\scripts\validate_steam_data.py --output .\data\audit\steam_data_audit.json
-```
-
----
-
-## Results | 结果
-
-Data-feasibility benchmark (not a final model result). A time-safe historical developer/publisher
-rule achieved, on the 2018 cohort:
-
-| Metric | Value |
+| 内容 | 入口 |
 |---|---|
-| ROC-AUC | 0.698 |
-| Average Precision | 0.321 |
-| Tie-aware expected Lift@10% | 4.08 |
+| 会议决议原文与实施说明 | [DECISIONS.md](docs/DECISIONS.md) |
+| 唯一机器设计配置 | [config.py](config.py) |
+| 当前业务标准与进度 | [PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md) |
+| 数据验收与当前规则指标 | [DATA_AUDIT.md](docs/DATA_AUDIT.md) |
+| 商业问题与建模计划 | [项目提案](Project_Proposal_Steam_Game_Success.md) |
+| 数据来源、许可与准备 | [data/README.md](data/README.md) |
+| 探索入口 | [EDA_Steam.ipynb](EDA_Steam.ipynb) |
+| 更新记录 | [JOURNAL.md](JOURNAL.md) |
 
----
+## Modeling contract | 建模标准
 
-## Limitations | 局限
+- **Target:** `hit_reviews = 1` iff total ratings reach the within-release-year 90th percentile, using linear interpolation and inclusive `>=`. Small valid cohorts remain labeled; cutoff ties are retained.
+- **Split:** train ≤2016, validation 2017, final test 2018. All 2019 releases are excluded. No random split or shuffled CV.
+- **History:** split developer/publisher strings on `;`; use strictly earlier release years. Aggregate the union of matching historical games, counting each game once. Use `alpha=10`, fixed prior mean `0.10`, and `log1p` counts. Missing/unseen entities receive count 0 and rate 0.10.
+- **Calendar:** UTC date parsing with invalid values logged as `NaT`; month/quarter and cyclic month/day-of-week encodings.
+- **Forbidden predictors:** ratings, owners, playtime, SteamSpy tags/tag votes, `tag_count`, and outcome derivatives. IDs, labels, split and release year are association/partition fields.
+- **Snapshot sensitivity only:** price, achievements, descriptions, requirements, support, media and their derivatives.
+- **Evaluation:** AP/PR-AUC, ROC-AUC, Top10% precision/recall/lift. Transformations fit historical training data; parameters and thresholds are selected on validation.
 
-- The source is a single May 2019 snapshot; snapshot fields may not equal their values at launch.
-- The target measures observed Steam engagement, not sales, revenue, profit, quality, or causal impact.
-- SteamSpy `owners` is an estimate with only 13 coarse intervals and is used for sensitivity only.
+主标签衡量观测热度，不等于销量、收入、利润或质量。同年分组减少跨年的累积差异，不能消除同年观察时长差异。正类率接近10%由标签设计决定，不能证明没有漂移。
 
-> 数据为 2019 年单次快照；标签反映的是 Steam 热度而非销量、收入或产品质量；结论仅为回顾性筛选证据，
-> 不构成因果或 ROI 主张。
+`STEP1 OUTPUT/` 是本地保留的组员交付。其 v1.2 标签、2019 测试范围与 A-only 特征边界不符合当前 v1.1；修正前只供审查参考，不能作为主模型入口。
 
----
+## Setup and reproducibility | 运行与复现
 
-## Team | 团队
+Python 3.11 or newer, from the repository root:
 
-Group coursework project. Member names and student IDs are intentionally omitted from this repository;
-the focus is on the project itself.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m src.data_audit_reproduce
+python -m unittest discover -s tests -v
+```
 
-> 小组课程项目。为保护隐私，仓库不包含成员姓名与学号，内容仅聚焦项目本身。
+Prepare the six CSVs in one directory. The main file is located using `STEAM_DATA_PATH`, `data/raw/steam.csv`, `data/raw/steam_store_games/steam.csv`, then the course-shared `../06_Datasets/steam/steam.csv`. No copy is required when the course data is present.
 
-## Acknowledgements | 致谢
+Raw inputs are read-only. Each run creates `outputs/data_audit/<UTC timestamp>/steam_data_audit.json`. Raw data, STEP1 personal delivery files, generated outputs, virtual environments and credentials remain local.
 
-Steam Store Games dataset by Nik Davis (CC BY 4.0); built for the IBA6102 course.
+## Current rule benchmark | 当前规则基准
+
+Retrospective feasibility rule, using the v1.1 multi-entity historical union:
+
+| Evaluation year | ROC-AUC | Average Precision | Expected Lift@10% |
+|---|---:|---:|---:|
+| 2017 | 0.686476 | 0.328394 | 4.225353 |
+| 2018 | 0.707903 | 0.336896 | 4.348139 |
+
+The 2018 rule uses history through 2017. Compare formal ML models against a rule fitted on the same history window. These are feasibility results, not final ML scores.
+
+## Data and limitations | 数据与边界
+
+Source: Nik Davis, [Steam Store Games (Clean dataset)](https://www.kaggle.com/datasets/nikdavis/steam-store-games), CC BY 4.0 as reported by the source metadata. Six CSVs, main table 27,075 ×18, collected around May 2019.
+
+This single snapshot does not prove launch-time attribute values or that historical hit labels were observable at the intended decision date. The project is a retrospective screening prototype; its evidence is non-causal and does not establish ROI.
+
+小组成员姓名与学号不进入公开仓库。后续修改先更新版本配置与决议记录，再同步文档和实现。

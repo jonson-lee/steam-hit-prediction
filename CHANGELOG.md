@@ -2,6 +2,15 @@
 
 All material project updates are recorded here. Raw third-party datasets are not committed.
 
+## 2026-10-09 — Adopt the meeting's v1.1 design
+
+- The user explicitly adopted the 2026-09-24 decisions and authorized local/GitHub synchronization.
+- Published the authoritative decision log and current design context, with versioned `config.py`.
+- Aligned UTC dates, inclusive linear q90 targets, 2019 exclusion, cyclic calendar features, multi-entity prior-year history, and strict feature policy.
+- New multi-entity union rule uses alpha=10 and fixed prior=0.10. The 2018 retrospective result is ROC-AUC 0.707903, AP 0.336896, expected Lift@10% 4.348139.
+- STEP1 deliveries and raw/generated data stay local. The earlier public-set restriction was superseded only for the explicitly authorized standards and necessary reproducible code.
+- Results below are historical and do not describe the current rule implementation.
+
 ## 2026-09-12 — Steam data acceptance and design freeze
 
 ### Added

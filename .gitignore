@@ -1,23 +1,35 @@
-# Raw third-party data stays local. Keep provenance and audit results in version control.
-data/raw/
+# 原始数据与处理结果只保留在本地
+data/raw/*
+!data/raw/README.md
+data/processed/*
+!data/processed/README.md
 *.csv
 
-# Notebook and Python runtime files
+# 每次运行输出与压缩包不入库
+outputs/*
+!outputs/README.md
+*.zip
+
+# Python / Jupyter
 .ipynb_checkpoints/
 __pycache__/
-*.py[cod]
-.DS_Store
-*.log
+*.pyc
+.venv/
+venv/
 
-# Credentials and machine-local configuration
+# 本机配置和凭据
 .env
 .env.*
 !.env.example
-*.key
-*.pem
-*.token
-credentials*.json
-secrets*.json
 
-# Local handoff archive; source files are tracked directly.
-project_6102.zip
+# macOS
+.DS_Store
+
+# 日志
+*.log
+
+# 组员原交付含个人路径、派生数据及旧口径，仅本地审查
+STEP1 OUTPUT/
+
+# 新提供的只读会议原件；完整正文及采用说明在docs/DECISIONS.md维护
+/DECISIONS.md

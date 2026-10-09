@@ -1,10 +1,11 @@
-# 小组项目提案（数据验收后修订稿）
+# 小组项目提案（v1.1 会议标准同步稿）
 
 ## 项目名称
 **Steam 游戏爆款预测：发行商如何用"发售前可得的信息"判断游戏能否成为爆款**
 
 - 课程：IBA6102 Machine Learning for Business
 - 状态：题目已锁定；数据验收 **Conditional Go**
+- 当前标准：2026-09-24 会议冻结的 v1.1，用户于2026-10-09正式指定。决议见 [docs/DECISIONS.md](docs/DECISIONS.md)，唯一机器配置见 [config.py](config.py)。
 
 ---
 
@@ -35,7 +36,7 @@
 
 ### 最终主标签（y）
 
-`total_ratings = positive_ratings + negative_ratings`。在每个 `release_year` 内，`total_ratings` 达到该年份第 90 百分位则 `hit = 1`，否则为 0。该标签表示**高市场热度/用户参与度**，不等于销量、收入、利润或产品质量。
+`total_ratings = positive_ratings + negative_ratings`。在每个有效 `release_year` 内，使用 linear 插值计算 `quantile(0.9)`；`total_ratings >=` 切点则 `hit_reviews = 1`，否则为 0。保留边界并列及小年份，不以文件顺序强制精确10%；2019和无效日期不生成建模标签。该标签表示**高市场热度/用户参与度**，不等于销量、收入、利润或产品质量。
 
 数据验收发现，SteamSpy `owners` 只有 13 个区间；直接用年份内第 90 百分位会因大量并列把整体正类推高至 20.97%，2019 年甚至达到 100%。因此 `owners` 只作次要的有序稳健性检验。好评率只作质量侧辅助分析，并设置最小评价数门槛。
 
@@ -48,20 +49,20 @@
 - 类别展开：`genres` / `categories` 拆多列（one-hot / multi-hot）
 - 平台：Windows / Mac / Linux 支持数
 - `required_age` 年龄分级
-- 发行月份/季度（季节性）；`release_year` 主要用于构造标签和时间切分
-- 厂商：`developer` / `publisher`，所有历史次数、命中率或信誉编码只使用此前发行记录
+- UTC 解析发行日期，无效日期转 NaT 并记录；发行月份/季度，以及月份和星期的 sin/cos 循环编码；`release_year` 用于标签和切分
+- 厂商：`developer` / `publisher` 按 `;` 拆分并去重，只使用严格此前发行年的游戏；匹配历史游戏并集按 appid 去重。输出 `dev_prior_count` / `dev_prior_hit_rate` / `pub_prior_count` / `pub_prior_hit_rate`；计数为 log1p，命中率按 alpha=10、固定 prior=0.10 平滑，未见/缺失回退0和0.10
 - 语言：是否支持英文 `english`
-- 敏感性模型才加入：快照价格、成就数量、描述/配置/媒体信息
+- 敏感性模型才加入：快照价格、成就数量、描述/配置/支持/媒体信息及派生字段
 
 ### 禁用特征（泄漏红线，写入报告）
-`positive_ratings`、`negative_ratings`、`owners`、`average_playtime`、`median_playtime`、`steamspy_tags`、全部社区 tag 投票数、评价数相关聚合 → 一律不进入 X。
+`positive_ratings`、`negative_ratings`、`owners`、`average_playtime`、`median_playtime`、`steamspy_tags`、全部社区 tag 投票数、`tag_count`、评价数相关聚合 → 一律不进入 X。
 
 其中 SteamSpy tags 来自玩家投票，是发行后的社区反馈，不是发售前特征。
 
 ## 5. 建模与评估计划
 
 1. 预处理：multi-hot / one-hot / 标准化，全部只在历史训练数据上 fit。
-2. 规则基线：此前发行记录计算的 developer/publisher 平滑命中率。
+2. 规则基线：按 config.py 的多厂商历史并集与平滑参数生成分数，developer/publisher 平滑率取平均；正式模型比较须使用相同 fit 窗口。
 3. **Logistic Regression**：可解释的 ML 基线。
 4. 一个正则化树集成模型：优先 XGBoost；环境不允许时使用 Random Forest。
 5. 时间验证：训练集为 2016 年及以前，验证集为 2017 年，最终测试集为 2018 年；禁止随机切分和 shuffled CV。
@@ -108,4 +109,4 @@
 > 建议分配：业务/汇报 2、数据 EDA 1–2、特征 1–2、建模 2、可解释 1（建模兼）。注意展示占 10 分，故事讲得清楚比堆模型更关键，务必保留会讲的人。
 
 ---
-*本文件已同步 2026-09-12 数据验收结论，仍会随建模结果更新。*
+*本文件于2026-10-09同步v1.1会议标准。任何设计变化先修改版本化配置并记录决议，再同步实现与文档；最终测试不参与调参。*

@@ -11,10 +11,15 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import sys
 from typing import Any
 
 import numpy as np
 import pandas as pd
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import config as design
 
 
 EXPECTED_FILES = {
@@ -57,13 +62,15 @@ def sha256(path: Path) -> str:
 
 
 def to_native(value: Any) -> Any:
+    if value is pd.NA or value is pd.NaT:
+        return None
     if isinstance(value, dict):
         return {str(key): to_native(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
         return [to_native(item) for item in value]
     if isinstance(value, (np.integer,)):
         return int(value)
-    if isinstance(value, (np.floating,)):
+    if isinstance(value, (float, np.floating)):
         return None if not np.isfinite(value) else float(value)
     if isinstance(value, (np.bool_,)):
         return bool(value)
@@ -76,6 +83,8 @@ def tie_aware_top_fraction(y: pd.Series, score: pd.Series, fraction: float) -> d
     """Expected top-fraction result when observations tie at the cutoff."""
     y_array = y.to_numpy(dtype=int)
     score_array = score.to_numpy(dtype=float)
+    if not len(y_array) or not 0 < fraction <= 1:
+        raise ValueError("Top-fraction evaluation requires rows and 0 < fraction <= 1")
     top_n = math.ceil(len(y_array) * fraction)
     cutoff = np.sort(score_array)[-top_n]
     above = score_array > cutoff
@@ -92,7 +101,9 @@ def tie_aware_top_fraction(y: pd.Series, score: pd.Series, fraction: float) -> d
         "tied_at_cutoff": int(tied.sum()),
         "slots_from_tie": slots_from_tie,
         "expected_selected_hit_rate": selected_rate,
-        "expected_lift": selected_rate / base_rate,
+        "expected_precision": selected_rate,
+        "expected_recall": expected_hits / int(y_array.sum()) if y_array.sum() else float("nan"),
+        "expected_lift": selected_rate / base_rate if base_rate else float("nan"),
     }
 
 
@@ -102,6 +113,8 @@ def rank_auc(y: pd.Series, score: pd.Series) -> float:
     ranks = score.rank(method="average").to_numpy(dtype=float)
     positives = int(y_array.sum())
     negatives = len(y_array) - positives
+    if not positives or not negatives:
+        return float("nan")
     return float(
         (ranks[y_array == 1].sum() - positives * (positives + 1) / 2)
         / (positives * negatives)
@@ -111,6 +124,8 @@ def rank_auc(y: pd.Series, score: pd.Series) -> float:
 def grouped_average_precision(y: pd.Series, score: pd.Series) -> float:
     """Tie-aware stepwise area under the precision-recall curve."""
     frame = pd.DataFrame({"y": y.to_numpy(dtype=int), "score": score.to_numpy(dtype=float)})
+    if frame.empty or not frame["y"].sum():
+        return float("nan")
     grouped = frame.groupby("score", sort=False)["y"].agg(["sum", "count"]).sort_index(ascending=False)
     true_positive = grouped["sum"].cumsum()
     selected = grouped["count"].cumsum()
@@ -120,12 +135,119 @@ def grouped_average_precision(y: pd.Series, score: pd.Series) -> float:
     return float((delta_recall * precision).sum())
 
 
-def history_score(history: pd.DataFrame, future: pd.DataFrame, column: str, alpha: float = 20.0) -> pd.Series:
-    """Bayesian-smoothed prior hit rate using historical records only."""
-    base_rate = float(history["hit_reviews"].mean())
-    aggregate = history.groupby(column, dropna=False)["hit_reviews"].agg(["sum", "count"])
-    mapping = (aggregate["sum"] + alpha * base_rate) / (aggregate["count"] + alpha)
-    return future[column].map(mapping).fillna(base_rate)
+def parse_release_dates(values: pd.Series) -> pd.Series:
+    """D-020: explicit UTC conversion; malformed values remain visible as NaT."""
+    return pd.to_datetime(
+        values, errors=design.RELEASE_DATE_ERRORS, utc=design.RELEASE_DATE_UTC,
+        format=design.RELEASE_DATE_FORMAT,
+    )
+
+
+def calendar_features(release_dates: pd.Series) -> pd.DataFrame:
+    """D-018: calendar inputs and cycles, with January=0 angle and Monday=0."""
+    dates = parse_release_dates(release_dates)
+    month = dates.dt.month.astype("Int64")
+    day = dates.dt.dayofweek.astype("Int64")
+    month_angle = 2 * np.pi * (month.astype(float) - design.MONTH_CYCLE_ORIGIN) / design.MONTH_CYCLE_PERIOD
+    day_angle = 2 * np.pi * (day.astype(float) - design.DAY_OF_WEEK_CYCLE_ORIGIN) / design.DAY_OF_WEEK_CYCLE_PERIOD
+    return pd.DataFrame({
+        "release_month": month,
+        "release_quarter": dates.dt.quarter.astype("Int64"),
+        "release_day_of_week": day,
+        "release_month_sin": np.sin(month_angle), "release_month_cos": np.cos(month_angle),
+        "release_day_of_week_sin": np.sin(day_angle), "release_day_of_week_cos": np.cos(day_angle),
+    }, index=release_dates.index)
+
+
+def prepare_analytical(main: pd.DataFrame) -> pd.DataFrame:
+    """Produce the frozen labels/cohorts without dropping or mutating raw rows."""
+    analytical = main.copy()
+    dates = parse_release_dates(main["release_date"])
+    analytical["release_date_utc"] = dates
+    analytical["release_year"] = dates.dt.year.astype("Int64")
+    for column, values in calendar_features(main["release_date"]).items():
+        analytical[column] = values
+    analytical["total_ratings"] = main["positive_ratings"] + main["negative_ratings"]
+    eligible = dates.notna() & ~analytical["release_year"].isin(design.EXCLUDED_RELEASE_YEARS)
+    analytical[design.TARGET_COLUMN] = pd.Series(pd.NA, index=main.index, dtype="Int8")
+    cutoffs = analytical.loc[eligible].groupby("release_year")["total_ratings"].transform(
+        lambda values: values.quantile(design.TARGET_QUANTILE, interpolation=design.TARGET_INTERPOLATION)
+    )
+    target_values = analytical.loc[eligible, "total_ratings"]
+    target = target_values.ge(cutoffs) if design.TARGET_INCLUSIVE else target_values.gt(cutoffs)
+    analytical.loc[eligible, design.TARGET_COLUMN] = target.astype("Int8")
+    analytical["split"] = "unknown"
+    analytical.loc[analytical["release_year"].isin(design.EXCLUDED_RELEASE_YEARS), "split"] = "excluded"
+    for name, mask in (
+        ("train", analytical["release_year"].le(design.TRAIN_MAX_YEAR)),
+        ("validation", analytical["release_year"].eq(design.VALIDATION_YEAR)),
+        ("test", analytical["release_year"].eq(design.TEST_YEAR)),
+    ):
+        analytical.loc[mask.fillna(False) & eligible, "split"] = name
+    return analytical
+
+
+def split_entities(value: Any) -> tuple[str, ...]:
+    """Split D-023 memberships, stripping blanks and repeated entities."""
+    if pd.isna(value):
+        return ()
+    entities = (item.strip() for item in str(value).split(design.ENTITY_DELIMITER))
+    return tuple(dict.fromkeys(item for item in entities if item and item.lower() not in design.ENTITY_MISSING_TOKENS))
+
+
+def history_features(frame: pd.DataFrame) -> pd.DataFrame:
+    """Walk forward by year, pooling the union of each entity's earlier games.
+
+    A prior game shared by multiple listed entities counts once. The four output
+    counts are already log1p transformed; rates use the fixed configured prior.
+    Same-year games are inserted only after every game in that year is encoded.
+    """
+    years = pd.to_numeric(frame["release_year"], errors="coerce").to_numpy(dtype=float, na_value=np.nan)
+    labels = pd.to_numeric(frame[design.TARGET_COLUMN], errors="coerce").to_numpy(dtype=float, na_value=np.nan)
+    if not np.isin(labels[np.isfinite(labels)], [0, 1]).all():
+        raise ValueError("Historical targets must be binary or missing")
+    if "appid" in frame and frame["appid"].duplicated().any():
+        raise ValueError("Historical encoding requires one row per appid")
+    output = {}
+    for column, prefix in (("developer", "dev"), ("publisher", "pub")):
+        memberships = [split_entities(value) for value in frame[column]]
+        counts = np.zeros(len(frame), dtype=float)
+        rates = np.full(len(frame), design.HISTORY_PRIOR_MEAN, dtype=float)
+        prior_games: dict[str, set[int]] = {}
+        for year in sorted(np.unique(years[np.isfinite(years)])):
+            positions = np.flatnonzero(years == year)
+            for position in positions:
+                pooled: set[int] = set()
+                for entity in memberships[position]:
+                    pooled.update(prior_games.get(entity, ()))
+                count = len(pooled)
+                hits = float(labels[list(pooled)].sum()) if pooled else 0.0
+                counts[position] = np.log1p(count)
+                rates[position] = (hits + design.HISTORY_ALPHA * design.HISTORY_PRIOR_MEAN) / (count + design.HISTORY_ALPHA)
+            if year in design.EXCLUDED_RELEASE_YEARS:
+                continue
+            for position in positions:
+                if not np.isfinite(labels[position]):
+                    continue
+                for entity in memberships[position]:
+                    prior_games.setdefault(entity, set()).add(int(position))
+        output[f"{prefix}_prior_count"] = counts
+        output[f"{prefix}_prior_hit_rate"] = rates
+    result = pd.DataFrame(output, index=frame.index)
+    design.assert_primary_feature_columns(result.columns)
+    return result
+
+
+def history_score(history: pd.DataFrame, future: pd.DataFrame, column: str, alpha: float = design.HISTORY_ALPHA) -> pd.Series:
+    """Compatibility helper; score only the supplied strictly earlier history."""
+    if alpha != design.HISTORY_ALPHA:
+        raise ValueError("History alpha is frozen in config.py")
+    unknown_future = future.copy()
+    unknown_future[design.TARGET_COLUMN] = pd.NA
+    combined = pd.concat([history, unknown_future], ignore_index=True)
+    features = history_features(combined)
+    prefix = {"developer": "dev", "publisher": "pub"}[column]
+    return pd.Series(features[f"{prefix}_prior_hit_rate"].iloc[len(history):].to_numpy(), index=future.index)
 
 
 def audit(data_dir: Path) -> dict[str, Any]:
@@ -168,52 +290,57 @@ def audit(data_dir: Path) -> dict[str, Any]:
             "missing_main_ids": len(main_ids - auxiliary_ids),
         }
 
-    dates = pd.to_datetime(main["release_date"], errors="coerce")
+    analytical = prepare_analytical(main)
+    dates = analytical["release_date_utc"]
     owners_parts = main["owners"].astype(str).str.extract(r"^\s*([0-9,]+)\s*-\s*([0-9,]+)\s*$")
     owner_lower = pd.to_numeric(owners_parts[0].str.replace(",", ""), errors="coerce")
     owner_upper = pd.to_numeric(owners_parts[1].str.replace(",", ""), errors="coerce")
     owner_midpoint = (owner_lower + owner_upper) / 2
     reviews = main["positive_ratings"] + main["negative_ratings"]
 
-    analytical = main.assign(
-        release_year=dates.dt.year,
-        total_ratings=reviews,
-        owner_midpoint=owner_midpoint,
+    analytical["owner_midpoint"] = owner_midpoint
+    owner_q90 = analytical.groupby("release_year")["owner_midpoint"].transform(
+        lambda values: values.quantile(design.TARGET_QUANTILE, interpolation=design.TARGET_INTERPOLATION)
     )
-    owner_q90 = analytical.groupby("release_year")["owner_midpoint"].transform(lambda values: values.quantile(0.9))
     analytical["hit_owner_inclusive"] = analytical["owner_midpoint"].ge(owner_q90)
-    rating_q90 = analytical.groupby("release_year")["total_ratings"].transform(lambda values: values.quantile(0.9))
-    analytical["hit_reviews"] = analytical["total_ratings"].ge(rating_q90).astype(int)
-
-    through_2018 = analytical[analytical["release_year"].le(2018)].copy()
+    through_2018 = analytical[analytical["split"].isin(("train", "validation", "test"))].copy()
     splits: dict[str, Any] = {}
     for name, mask in {
-        "train_through_2016": through_2018["release_year"].le(2016),
-        "validation_2017": through_2018["release_year"].eq(2017),
-        "test_2018": through_2018["release_year"].eq(2018),
+        f"train_through_{design.TRAIN_MAX_YEAR}": through_2018["split"].eq("train"),
+        f"validation_{design.VALIDATION_YEAR}": through_2018["split"].eq("validation"),
+        f"test_{design.TEST_YEAR}": through_2018["split"].eq("test"),
     }.items():
         split = through_2018[mask]
         splits[name] = {
             "rows": len(split),
+            "positives": int(split[design.TARGET_COLUMN].sum()),
             "positive_rate_review_top_decile": float(split["hit_reviews"].mean()),
             "positive_rate_owner_q90_inclusive": float(split["hit_owner_inclusive"].mean()),
         }
 
     rule_baseline: dict[str, Any] = {}
-    for evaluation_year in (2017, 2018):
+    encoded_history = history_features(through_2018)
+    for evaluation_year in (design.VALIDATION_YEAR, design.TEST_YEAR):
         history = through_2018[through_2018["release_year"].lt(evaluation_year)]
         future = through_2018[through_2018["release_year"].eq(evaluation_year)]
-        developer_score = history_score(history, future, "developer")
-        publisher_score = history_score(history, future, "publisher")
-        score = (developer_score + publisher_score) / 2
+        if future.empty:
+            continue
+        developer_score = encoded_history.loc[future.index, "dev_prior_hit_rate"]
+        publisher_score = encoded_history.loc[future.index, "pub_prior_hit_rate"]
+        score = (
+            design.RULE_BASELINE_ENTITY_WEIGHTS[0] * developer_score
+            + design.RULE_BASELINE_ENTITY_WEIGHTS[1] * publisher_score
+        )
         rule_baseline[str(evaluation_year)] = {
             "rows": len(future),
             "positive_rate": float(future["hit_reviews"].mean()),
+            "history_rows": len(history),
+            "history_max_release_year": int(history["release_year"].max()) if len(history) else None,
             "roc_auc": rank_auc(future["hit_reviews"], score),
             "average_precision": grouped_average_precision(future["hit_reviews"], score),
-            "top_10_percent": tie_aware_top_fraction(future["hit_reviews"], score, 0.10),
-            "unseen_developer_rate": float((~future["developer"].isin(history["developer"])).mean()),
-            "unseen_publisher_rate": float((~future["publisher"].isin(history["publisher"])).mean()),
+            "top_10_percent": tie_aware_top_fraction(future["hit_reviews"], score, design.EVALUATION_TOP_FRACTION),
+            "unseen_developer_rate": float(encoded_history.loc[future.index, "dev_prior_count"].eq(0).mean()),
+            "unseen_publisher_rate": float(encoded_history.loc[future.index, "pub_prior_count"].eq(0).mean()),
         }
 
     structural_checks = {
@@ -233,12 +360,13 @@ def audit(data_dir: Path) -> dict[str, Any]:
         {
             "verdict": {
                 "file_integrity": "PASS" if all(structural_checks.values()) else "FAIL",
-                "analytical_acceptance": "CONDITIONAL_GO",
+                "analytical_acceptance": "CONDITIONAL_GO" if all(structural_checks.values()) else "FAIL",
                 "reason": (
                     "Use release-year top-decile total ratings as the primary popularity label, "
                     "exclude 2019, enforce chronological validation, and exclude post-release outcomes/tags."
                 ),
             },
+            "design": design.design_contract(),
             "structural_checks": structural_checks,
             "files": files,
             "main_table": {
@@ -252,6 +380,10 @@ def audit(data_dir: Path) -> dict[str, Any]:
                 "release_date_min": dates.min(),
                 "release_date_max": dates.max(),
                 "release_year_counts": dates.dt.year.value_counts().sort_index().to_dict(),
+                "invalid_release_date_count": int(dates.isna().sum()),
+                "invalid_release_dates": main.loc[dates.isna(), ["appid", "release_date"]].to_dict("records"),
+                "excluded_release_year_rows": int(analytical["split"].eq("excluded").sum()),
+                "unknown_split_rows": int(analytical["split"].eq("unknown").sum()),
                 "owner_interval_count": int(main["owners"].nunique()),
                 "owner_q90_inclusive_positive_rate_all_years": float(analytical["hit_owner_inclusive"].mean()),
                 "owner_q90_inclusive_positive_rate_2019": float(
@@ -265,27 +397,13 @@ def audit(data_dir: Path) -> dict[str, Any]:
             "auxiliary_coverage": auxiliary_coverage,
             "recommended_time_splits": splits,
             "time_safe_rule_baseline": rule_baseline,
-            "feature_policy": {
-                "primary_features": [
-                    "release month/quarter",
-                    "english",
-                    "developer/publisher encoded only from prior releases",
-                    "platforms",
-                    "required_age",
-                    "categories",
-                    "genres",
-                ],
-                "sensitivity_only_snapshot_features": ["price", "achievements", "descriptions/requirements/media"],
-                "forbidden_predictors": [
-                    "positive_ratings",
-                    "negative_ratings",
-                    "owners",
-                    "average_playtime",
-                    "median_playtime",
-                    "steamspy_tags",
-                    "steamspy_tag_data.csv vote counts",
-                ],
-            },
+            "history_encoding": design.design_contract()["history"],
+            "information_boundary": (
+                "Retrospective 2019 snapshot: prior-release-year membership is enforced, "
+                "but historical launch-time outcomes and attributes are not observed. "
+                "Rolling 2018 rules include 2017 history; compare models using the same fit window."
+            ),
+            "feature_policy": design.design_contract()["feature_policy"],
         }
     )
 
@@ -300,12 +418,16 @@ def main() -> None:
     parser.add_argument("--output", type=Path, help="Optional JSON output path")
     args = parser.parse_args()
 
+    if args.output and args.output.exists():
+        parser.error("--output already exists; choose a new run path to avoid overwriting results")
+
     result = audit(args.data_dir)
     rendered = json.dumps(result, indent=2, ensure_ascii=False)
     print(rendered)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(rendered + "\n", encoding="utf-8")
+        with args.output.open("x", encoding="utf-8") as handle:
+            handle.write(rendered + "\n")
 
 
 if __name__ == "__main__":

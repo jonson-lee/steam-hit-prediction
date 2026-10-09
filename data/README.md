@@ -11,10 +11,10 @@
 The accepted local source was the course archive:
 
 ```text
-6102-Machine-Learning-for-Business/06_Datasets/datasetSteam.zip
+../06_Datasets/datasetSteam.zip
 ```
 
-The ZIP integrity test passed, and each extracted CSV's size and CRC matched its ZIP member. The project-local copies are in `data/raw/steam_store_games/` and match the accepted SHA-256 fingerprints.
+The ZIP integrity test passed, and each extracted CSV's size and CRC matched its ZIP member. Raw files remain local and match the accepted SHA-256 fingerprints. The runner supports `STEAM_DATA_PATH`, `data/raw/steam.csv`, `data/raw/steam_store_games/steam.csv`, or the course-shared `../06_Datasets/steam/steam.csv` without copying.
 
 ## File inventory
 
@@ -31,6 +31,8 @@ All six tables have complete, unique app IDs and no exact duplicate rows. The ma
 
 ## Modeling contract
 
+Current design: **v1.1 (2026-09-24 meeting)**, adopted on 2026-10-09. The authoritative decisions are in [docs/DECISIONS.md](../docs/DECISIONS.md); executable policy is in [config.py](../config.py).
+
 Use releases through 2018 only. The 2019 cohort is incomplete.
 
 Primary target:
@@ -38,13 +40,17 @@ Primary target:
 ```text
 total_ratings = positive_ratings + negative_ratings
 hit_reviews = total_ratings >= within-release-year 90th percentile
+cutoff = quantile(0.9, interpolation='linear'); ties and small cohorts retained
 ```
 
 Target/outcome columns must never enter the predictors:
 
 - `positive_ratings`, `negative_ratings`, `owners`;
 - `average_playtime`, `median_playtime`;
-- `steamspy_tags` and the 371 tag-vote columns.
+- `steamspy_tags`, `tag_count`, and the 371 tag-vote columns;
+- all outcome derivatives, IDs, labels, split, and release year as predictors.
+
+Price, achievements and all auxiliary snapshot fields/derivatives are sensitivity-only. Parse dates as UTC; invalid dates are logged, not silently labeled. Use train ≤2016, validation 2017, test 2018. Multi-entity developer/publisher history uses strictly earlier release years, matching-game unions with each appid counted once, alpha=10, prior mean=0.10, and log1p counts.
 
 See `Project_Proposal_Steam_Game_Success.md` and `docs/DATA_AUDIT.md` for the accepted feature and time-split policy.
 
@@ -53,7 +59,7 @@ See `Project_Proposal_Steam_Game_Success.md` and `docs/DATA_AUDIT.md` for the ac
 From the project root:
 
 ```powershell
-python .\scripts\validate_steam_data.py --output .\data\audit\steam_data_audit.json
+python -m src.data_audit_reproduce
 ```
 
 Expected headline result:
@@ -62,5 +68,7 @@ Expected headline result:
 file_integrity: PASS
 analytical_acceptance: CONDITIONAL_GO
 ```
+
+Each run writes a separate UTC directory under `outputs/data_audit/`. STEP1 OUTPUT is a local delivery under review and is not a current modeling input.
 
 Raw files are intentionally ignored by `.gitignore`. Do not upload the raw data to a repository or external platform as part of this project workflow.
