@@ -1,12 +1,12 @@
 # Steam Dataset Acceptance and v1.1 Rule Report
 
-Updated: 2026-10-09. Current standard: the 2026-09-24 meeting's **v1.1**, explicitly adopted by the user. See [DECISIONS.md](DECISIONS.md), [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) and [config.py](../config.py).
+Updated: 2026-10-12. Business standard remains the 2026-09-24 meeting's **v1.1**; the current parsing/handoff policy is **v1.2**. Formal data acceptance is complete; see [current acceptance](DATA_HANDOFF_ACCEPTANCE.md). Rule metrics below are historical 2026-10-09 feasibility evidence. See [DECISIONS.md](DECISIONS.md), [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) and [config.py](../config.py).
 
 ## Verdict and data quality
 
 **File integrity: PASS. Analytical acceptance: CONDITIONAL_GO.** The six-file Nik Davis Steam dataset supports a retrospective classification/ranking prototype. It does not prove launch-time feature values or deployment-time availability of historical hit labels.
 
-The accepted course ZIP passes integrity testing; the extracted six CSVs match ZIP size/CRC and accepted SHA-256 fingerprints. Main table: 27,075 rows ×18 columns. Every table has unique, complete app IDs and no exact duplicate rows. The main table has 1 missing developer and 14 missing publishers; release dates and owner ranges parse successfully, rating counts are nonnegative, and every game has at least one rating.
+The accepted course ZIP passes integrity testing; the extracted six CSVs match ZIP size/CRC and accepted SHA-256 fingerprints. Main table: 27,075 rows ×18 columns. Every table has unique, complete app IDs and no exact duplicate rows. The historical default-NA audit counted 1 missing developer and 14 missing publishers; the adopted literal-string policy counts 3 and 23 respectively. release dates and owner ranges parse successfully, rating counts are nonnegative, and every game has at least one rating.
 
 Whitespace-only entity names are missing for history encoding. Six additional publisher strings contain only whitespace; they do not create a shared Unknown history group.
 
@@ -53,13 +53,13 @@ The earlier whole-string, alpha=20 rule used historical prevalence as its prior 
 
 ## STEP1 and reproducibility
 
-STEP1 OUTPUT completed cleaning, derived fields, EDA and label exploration; its CSVs reproduce its v1.2 script. Strict first-rank labels, small-cohort exclusion, test including2019, SteamSpy tags/tag_count and snapshot fields conflict with the adopted v1.1. The original delivery remains local for review and is not a current modeling handoff. Supervised X/y and formal ML pipelines remain to be built.
+STEP1 OUTPUT completed cleaning, derived fields, EDA and label exploration; its CSVs reproduce its v1.2 script. Strict first-rank labels, small-cohort exclusion, test including2019, SteamSpy tags/tag_count and snapshot fields conflict with the adopted v1.1. The obsolete delivery was removed in the authorized 2026-10-12 cleanup. Formal X/y and chronological metadata are complete; use the [modeling handoff](MODELING_HANDOFF.md). Formal ML pipelines have not started.
 
 From the repository root:
 
 ```bash
 python -m src.data_audit_reproduce
-python -m unittest discover -s tests -v
+python -B -m scripts.run_data_contract_tests
 ```
 
 Input discovery is documented in [data/README.md](../data/README.md). Each audit creates a new UTC directory under outputs/data_audit. Raw files and generated results remain local.

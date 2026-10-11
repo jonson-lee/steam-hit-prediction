@@ -1,0 +1,709 @@
+{
+  "task_meta": {
+    "project": "STEAM",
+    "batch": "STEAM-B03",
+    "task_id": "T01",
+    "revision": "GPT-R2",
+    "role": "GPT 主控，串行文本整合",
+    "artifact_type": "synthetic_boundary_case_spec",
+    "artifact_version": "1.1.1",
+    "supersedes": "T01/R1",
+    "baseline": {
+      "h04_source_sha256": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
+      "config_sha256": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e",
+      "r1_json_sha256": "0460404bd76d57a01b66de08d2d3a1ffb748daff44f63ea0a9f6a911cb054f2e"
+    },
+    "execution": {
+      "cases_executed": 0,
+      "unit_runs": "not_executed",
+      "integration_runs": "not_executed",
+      "runner_authored": false,
+      "local_file_access": "attachments and config hash only",
+      "csv_or_credentials_accessed": false,
+      "repo_written": false,
+      "installed_or_trained": false,
+      "network_called": false,
+      "config_or_tree_modified_or_frozen": false,
+      "scope_expanded": false,
+      "static_json_check": "performed"
+    }
+  },
+  "interface_facts_from_revision": {
+    "note": "以下为本次修订正文给出的实际接口事实，作为断言绑定依据；本规范不据其推导任何新规则。",
+    "facts": [
+      "audit_appid(frame) -> (report, blockers)；report 含 empty_cell、whitespace_only_cell、duplicate_raw_value_rows、duplicate_after_strip_rows。",
+      "重复计数口径 = duplicated(keep=False)，即所有参与重复的行数，不是超出首次出现的行数。",
+      "audit_numeric(series, name, config)；required_age 使用该函数；class_counts.out_of_range_after_conversion 记录转换溢出。",
+      "audit_entity_field(frame, column, mask, config)；仅 developer / publisher 使用实体解析规则。",
+      "实体规则：按 \";\" 拆分、strip、丢弃空 token、排除缺失词、保留实体拼写大小写、行内去重。",
+      "rows_with_inline_missing_token 每行最多计 1。",
+      "platforms / categories / genres 仅报告格式证据，不得套用已冻结的实体解析规则。",
+      "主流程有日期窗口计数；没有预处理选择器；不生成正式 split 赋值或 X/y。",
+      "覆盖记录键：checks.checks_completed_this_run、checks.checks_not_run_this_run。",
+      "字段窗口键：field_audit_scope.rows_in_scope、field_audit_scope.used_to_select_preprocessing=false。"
+    ]
+  },
+  "contract_facts_from_h04": {
+    "note": "H04 契约条款，仅作断言绑定；未扩充。",
+    "facts": [
+      "--input-main 必填；--tree 必填 xgb/rf；无自动降级。",
+      "stdout 输出 JSON；stderr 输出诊断；不写文件。",
+      "只读取 appid 与 PRIMARY_RAW_COLUMNS：release_date、english、developer、publisher、platforms、required_age、categories、genres。",
+      "CSV 保留原始字符串：dtype=str、keep_default_na=False、na_filter=False。",
+      "日期 utc=True、errors=\"coerce\"、format=\"mixed\"。",
+      "train<=2016、validation=2017、test=2018；2019 排除。",
+      "字段格式审计仅覆盖有效日期且年份<=2017。",
+      "实体分隔符 \";\"；缺失词 unknown、nan、none、null、<na>。",
+      "platforms/categories/genres 解析规则仍待确定。",
+      "预检完成不能宣称完整流水线 GO。"
+    ]
+  },
+  "placeholder_legend_minimal": {
+    "note": "剩余记号仅描述未来测试调用，不代表新增生产接口。",
+    "placeholders": [
+      {
+        "id": "CLI_INVOCATION",
+        "meaning": "--input-main指向合成输入，--tree取合法值",
+        "status": "future_invocation_not_executed"
+      }
+    ]
+  },
+  "level_definitions": {
+    "component": "直接以合成 frame/series 调用已核对接口（audit_appid / audit_numeric / audit_entity_field），不构造主流程 CSV、不填充无关列。",
+    "main-flow": "以合成 CSV 进入主流程；输入按“主流程合法基准”构造，全部 9 个必需列齐备且无数据阻断触发条件，除非该用例自身即为阻断/失败用例。",
+    "forbidden": "禁止“所有字段统一用 \"_\" 填充”的构造方式；该方式在 R1 已删除。"
+  },
+  "valid_baseline_frame": {
+    "id": "VALID_BASELINE_TRIPLE",
+    "note": "合法基准：仅含合成输入字符串，不冻结 platforms/categories/genres 待决解析规则。",
+    "columns": [
+      "appid",
+      "release_date",
+      "english",
+      "developer",
+      "publisher",
+      "platforms",
+      "required_age",
+      "categories",
+      "genres"
+    ],
+    "rows": [
+      {
+        "appid": "1",
+        "release_date": "2016-06-01",
+        "english": "1",
+        "required_age": "0",
+        "developer": "A",
+        "publisher": "P",
+        "platforms": "windows",
+        "categories": "Single-player",
+        "genres": "Action"
+      },
+      {
+        "appid": "2",
+        "release_date": "2017-06-01",
+        "english": "1",
+        "required_age": "0",
+        "developer": "A",
+        "publisher": "P",
+        "platforms": "windows",
+        "categories": "Single-player",
+        "genres": "Action"
+      },
+      {
+        "appid": "3",
+        "release_date": "2018-06-01",
+        "english": "1",
+        "required_age": "0",
+        "developer": "A",
+        "publisher": "P",
+        "platforms": "windows",
+        "categories": "Single-player",
+        "genres": "Action"
+      }
+    ],
+    "derived_windows": {
+      "2019": "absent",
+      "train_years": "<=2016 -> row appid=1",
+      "validation_year": "2017 -> row appid=2",
+      "test_year": "2018 -> row appid=3"
+    },
+    "used_by_cases": [
+      "C-07",
+      "C-09",
+      "C-10"
+    ]
+  },
+  "cases": [
+    {
+      "id": "C-01",
+      "level": "component",
+      "title": "audit_appid：空串与纯空白分别计数，计数非负",
+      "synthetic_input": {
+        "call": "audit_appid(frame)",
+        "frame": {
+          "appid": [
+            "",
+            "   ",
+            "10"
+          ]
+        },
+        "construction_note": "仅含 appid 列的最小合成 frame；不填充其他列（组件级）。"
+      },
+      "expected_assertions": [
+        "report.empty_cell == 1；report.whitespace_only_cell == 1；两类互斥且计数为非负整数。",
+        "report.duplicate_raw_value_rows == 0；report.duplicate_after_strip_rows == 0。",
+        "set(blockers) == {'APPID_MISSING'}；空串与纯空白导致缺失阻断，不导致重复阻断。"
+      ],
+      "audit_scope": "appid 合法性检查（空串/纯空白/重复计数口径）；不涉及日期、数值、实体",
+      "implementation_details_to_verify": [
+        "尚未运行：上述组件断言。空白使用str.strip；本用例仅验证ASCII空格样本。"
+      ]
+    },
+    {
+      "id": "C-02",
+      "level": "component",
+      "title": "audit_appid：[\" \", \" \"] 的 raw 重复为 2、strip 后重复为 0",
+      "synthetic_input": {
+        "call": "audit_appid(frame)",
+        "frame": {
+          "appid": [
+            " ",
+            " "
+          ]
+        },
+        "construction_note": "仅含 appid 列；两行均为同一空白字符串。"
+      },
+      "expected_assertions": [
+        "report.duplicate_raw_value_rows == 2（duplicated(keep=False)：两行均参与重复）。",
+        "report.duplicate_after_strip_rows == 0（strip 后为空，按实现口径不构成重复参与行）。",
+        "两个重复计数均为非负整数，且口径一致为 duplicated(keep=False)，即“所有参与重复的行数”。"
+      ],
+      "audit_scope": "appid 重复计数（raw 口径 vs strip 口径）",
+      "implementation_details_to_verify": [
+        "strip重复计数先排除strip后为空的值；两项都是参与重复的行数，但排除规则不同，不能相加。",
+        "尚未运行：上述组件断言。"
+      ]
+    },
+    {
+      "id": "C-03",
+      "level": "component",
+      "title": "audit_appid：[\"1\", \" 1 \"] strip 后重复为 2 并触发阻断",
+      "synthetic_input": {
+        "call": "audit_appid(frame)",
+        "frame": {
+          "appid": [
+            "1",
+            " 1 "
+          ]
+        },
+        "construction_note": "仅含 appid 列；raw 不同、strip 后同值。"
+      },
+      "expected_assertions": [
+        "report.duplicate_raw_value_rows == 0；report.duplicate_after_strip_rows == 2。",
+        "set(blockers) == {'APPID_DUPLICATE'}；不存在APPID_MISSING或APPID_ILLEGAL。",
+        "audit_appid只返回(report, blockers)；本组件用例不断言stdout、stderr、进程退出或coverage。"
+      ],
+      "audit_scope": "appid 重复检测的 strip 口径与阻断触发",
+      "implementation_details_to_verify": [
+        "尚未运行：上述组件断言。CLI层的诊断与退出另由main-flow用例验证。"
+      ]
+    },
+    {
+      "id": "C-04",
+      "level": "component",
+      "title": "audit_numeric(required_age)：1e309 计入转换溢出，不计入有限数",
+      "synthetic_input": {
+        "call": "audit_numeric(series, name, config)",
+        "arguments": {
+          "series": [
+            "1e309"
+          ],
+          "name": "required_age",
+          "config": "当前环境 config.py"
+        },
+        "construction_note": "单元素 series，仅测 required_age 这一实际使用数值审计的字段；不构造其他字段。"
+      },
+      "expected_assertions": [
+        "report.class_counts.out_of_range_after_conversion == 1。",
+        "report.class_counts.finite_integer == 0；report.class_counts.finite_decimal == 0。",
+        "本组件用例仅验证聚合统计；不要求输出行级标识，也不假定audit_numeric直接产生主流程blocker或进程退出。"
+      ],
+      "audit_scope": "数值边界与转换溢出；字段限定为 required_age",
+      "implementation_details_to_verify": [
+        "尚未运行：上述required_age组件断言。"
+      ]
+    },
+    {
+      "id": "C-05",
+      "level": "component",
+      "title": "audit_entity_field(developer / publisher)：A;unknown 与 A;unknown;NULL 的行内缺失计数均为 1、实体数均为 1",
+      "synthetic_input": {
+        "call": "audit_entity_field(frame, column, mask, config)",
+        "columns_to_parameterize": [
+          "developer",
+          "publisher"
+        ],
+        "values_to_parameterize": [
+          "A;unknown",
+          "A;unknown;NULL"
+        ],
+        "construction": "每个(column,value)组合单独调用一次；frame仅含{column:[value]}，mask为与frame索引对齐的单元素True布尔Series。",
+        "calls_per_case": 4,
+        "config_source": "绑定的v1.1 config；不硬编码另一套实体规则。"
+      },
+      "expected_assertions": [
+        "对每个单行调用：report.rows_in_scope == 1；report.rows_with_inline_missing_token == 1。",
+        "report.entity_total_after_dedup == 1；report.rows_resolving_to_one_entity == 1。",
+        "report.rows_with_inline_duplicate_entities == 0；report.rows_with_whitespace_padded_entity_tokens == 0。",
+        "四个独立调用均满足上述断言；不把两行聚合报告当成逐行报告。若另行合并两行调用，inline_missing聚合计数应为2。"
+      ],
+      "audit_scope": "实体字段解析（仅 developer / publisher）：分隔符、缺失词排除、行内缺失计数、实体计数",
+      "implementation_details_to_verify": [
+        "实体按;拆分、strip、丢弃空token；missing token按lower匹配；实体本身大小写敏感去重。",
+        "尚未运行：四个单行组件调用；nan/none/<na>匹配不在本用例范围。"
+      ]
+    },
+    {
+      "id": "C-06",
+      "level": "component",
+      "title": "audit_entity_field(developer / publisher)：A;;B 实体 2 / 缺失 0；A;A;B 去重实体 2，不误报空格",
+      "synthetic_input": {
+        "call": "audit_entity_field(frame, column, mask, config)",
+        "columns_to_parameterize": [
+          "developer",
+          "publisher"
+        ],
+        "values_to_parameterize": [
+          "A;;B",
+          "A;A;B"
+        ],
+        "construction": "每个(column,value)组合单独调用一次；frame仅含{column:[value]}，mask为与frame索引对齐的单元素True布尔Series。",
+        "calls_per_case": 4,
+        "config_source": "绑定的v1.1 config；不硬编码另一套实体规则。"
+      },
+      "expected_assertions": [
+        "对每个单行调用：report.rows_in_scope == 1；report.entity_total_after_dedup == 2；report.rows_resolving_to_multiple_entities == 1。",
+        "report.rows_with_inline_missing_token == 0；report.rows_with_whitespace_padded_entity_tokens == 0。",
+        "value='A;;B'时report.rows_with_inline_duplicate_entities == 0。",
+        "value='A;A;B'时report.rows_with_inline_duplicate_entities == 1。",
+        "四个独立调用分别断言；inline_missing为0不能代替whitespace计数为0的检查。"
+      ],
+      "audit_scope": "实体字段解析（仅 developer / publisher）：空 token 丢弃、行内去重、缺失词不误报",
+      "implementation_details_to_verify": [
+        "尚未运行：四个单行组件调用。空token丢弃和大小写敏感去重已从基线源码核对。"
+      ]
+    },
+    {
+      "id": "C-07",
+      "level": "main-flow",
+      "title": "主流程日期窗口：UTC 跨年、NaT、2016 合法行、2018 注入异常不入审计聚合",
+      "synthetic_input": {
+        "kind": "main_flow_synthetic_csv",
+        "columns": "全部 9 个必需列（appid、release_date、english、developer、publisher、platforms、required_age、categories、genres）",
+        "rows": [
+          {
+            "appid": "30",
+            "release_date": "2016-12-31T23:30:00-05:00",
+            "english": "1",
+            "required_age": "0",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          },
+          {
+            "appid": "31",
+            "release_date": "not-a-date",
+            "english": "1",
+            "required_age": "0",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          },
+          {
+            "appid": "32",
+            "release_date": "2016-06-01",
+            "english": "1",
+            "required_age": "0",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          },
+          {
+            "appid": "33",
+            "release_date": "2017-06-15",
+            "english": "1",
+            "required_age": "0",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          },
+          {
+            "appid": "34",
+            "release_date": "2018-06-01",
+            "english": "BAD",
+            "required_age": "1e309",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          },
+          {
+            "appid": "35",
+            "release_date": "2019-01-01",
+            "english": "1",
+            "required_age": "0",
+            "developer": "A",
+            "publisher": "P",
+            "platforms": "windows",
+            "categories": "Single-player",
+            "genres": "Action"
+          }
+        ],
+        "date_parse_params": {
+          "utc": true,
+          "errors": "coerce",
+          "format": "mixed"
+        },
+        "injected_faults": {
+          "appid": "34",
+          "english": "BAD",
+          "required_age": "1e309"
+        },
+        "note": "appid 34 为 2018 合法日期行，字段异常仅作为“不得进入审计聚合”的探针。"
+      },
+      "expected_assertions": [
+        "构造说明中的appid=30应按UTC解释为2017-01-01T04:30:00+00:00；appid=31为NaT。这些标识仅用于合成输入说明，不要求出现在聚合输出。",
+        "date_audit.nat_rows == 1；date_audit.fit_window_rows_le_train_max_year == 1；date_audit.selection_year_rows == 2；date_audit.test_year_rows == 1；date_audit.excluded_year_rows == 1。",
+        "field_audit_scope.rows_in_scope == 3；该字段为整数，不是appid集合。",
+        "field_audit_scope.test_year_rows_excluded == 1；field_audit_scope.used_to_select_preprocessing == false。",
+        "field_audit.english.rows_in_scope == 3；field_audit.english.legal_one == 3；field_audit.english.illegal_non_empty_value == 0。",
+        "field_audit.required_age.rows_in_scope == 3；其class_counts.finite_integer == 3、out_of_range_after_conversion == 0、other_unparseable == 0。",
+        "2018行上的BAD和1e309不进入上述聚合；主流程不产生ENGLISH_ILLEGAL_VALUE或REQUIRED_AGE_PARSE_FAILURE。",
+        "本场景数据阻断为空：blocking_findings不存在或为空。H04只记录年份/窗口计数，不据此断言已生成正式split或X/y。"
+      ],
+      "audit_scope": "日期解析（utc/coerce/mixed）、UTC 跨年、NaT、审计窗口年份边界、注入异常的隔离、字段窗口记录键",
+      "implementation_details_to_verify": [
+        "尚未运行：上述主流程用例；当前断言为按绑定源码推导的静态预期。"
+      ]
+    },
+    {
+      "id": "C-08",
+      "level": "main-flow",
+      "title": "主流程失败路径：缺列与编码错误；后续未执行检查不得列为已完成",
+      "synthetic_input": {
+        "scenarios": [
+          {
+            "scenario_id": "C-08a",
+            "fault": "missing_column",
+            "detail": "合成 CSV 头仅含 appid 与 release_date，缺 english/developer/publisher/platforms/required_age/categories/genres 中若干列",
+            "rows": 1
+          },
+          {
+            "scenario_id": "C-08b",
+            "fault": "encoding_error",
+            "detail": "同样内容以与声明编码不一致的字节序列构造（声明 utf-8 而字节流含非法序列），使解码阶段失败",
+            "rows": 1
+          }
+        ],
+        "invocation": "以 --input-main 指向该合成输入、--tree 取合法值"
+      },
+      "expected_assertions": [
+        "缺列或声明编码解码失败均产生非零进程退出和可解析JSON，诊断走stderr，不写文件。",
+        "checks.checks_completed_this_run只列实际完成的检查；checks.checks_not_run_this_run列尚未执行的计划检查，两者stage集合不相交。",
+        "上述两条读取失败路径中，dates/scope/english/required_age/entities/multivalue不能标为完成。",
+        "缺列被显式报告，不补列；解码失败不能成为空数据成功结果。",
+        "检查已完成但发现阻断，与检查未执行是不同状态；不按最终失败结论反推所有检查均未完成。"
+      ],
+      "audit_scope": "读取阶段失败传播、缺列检测、编码错误、覆盖记录两键语义",
+      "implementation_details_to_verify": [
+        "completed/not_run元素均为结构化记录，stage识别检查；本用例不假定解码失败必然在header或read的某一固定阶段。",
+        "尚未运行：缺列和编码失败路径。"
+      ]
+    },
+    {
+      "id": "C-09",
+      "level": "main-flow",
+      "title": "受限读取：read_csv 的 usecols 恰为 9 个必需列，且读取参数正确",
+      "synthetic_input": {
+        "kind": "instrumented_main_flow_read",
+        "synthetic_csv_columns": [
+          "appid",
+          "release_date",
+          "english",
+          "developer",
+          "publisher",
+          "platforms",
+          "required_age",
+          "categories",
+          "genres",
+          "_RESULT_PLACEHOLDER_",
+          "_LABEL_PLACEHOLDER_"
+        ],
+        "required_usecols": [
+          "appid",
+          "release_date",
+          "english",
+          "developer",
+          "publisher",
+          "platforms",
+          "required_age",
+          "categories",
+          "genres"
+        ],
+        "instrumentation": "捕获 read_csv 的实际调用参数；验证方法只比对参数与列名集合，不读取任何结果列的值。",
+        "rows_ref": "VALID_BASELINE_TRIPLE.rows",
+        "extra_column_values": {
+          "_RESULT_PLACEHOLDER_": "synthetic-result",
+          "_LABEL_PLACEHOLDER_": "synthetic-label"
+        }
+      },
+      "expected_assertions": [
+        "read_csv 实际传入的 usecols 集合恰等于 required_usecols 这 9 个必需列。",
+        "read_csv 实际传入 dtype=str。",
+        "read_csv 实际传入 keep_default_na=False。",
+        "read_csv 实际传入 na_filter=False。",
+        "不接受“先读全表再丢列”的实现：必须由 usecols 完成列裁剪。",
+        "成功帧包含全部 9 个必需列（缺一即不满足）。",
+        "额外结果列 _RESULT_PLACEHOLDER_ / _LABEL_PLACEHOLDER_ 未被读取；验证过程不读取、不比较、不采样其结果值。"
+      ],
+      "audit_scope": "受限读取（列白名单与读取参数）；不涉及结果列值、不涉及缺失词与日期语义",
+      "implementation_details_to_verify": [
+        "未来测试层spy观察read_csv调用参数；不要求给生产代码新增钩子，也不读取额外结果列值。",
+        "usecols按集合核对；PRIMARY_RAW_COLUMNS有8列，加appid共9列。",
+        "尚未运行：受限读取用例。"
+      ]
+    },
+    {
+      "id": "C-10",
+      "level": "main-flow",
+      "title": "主流程合法基准 + 待决事项：exit=4 且 verdict=\"NO_DATA_BLOCKER_WITH_OPEN_ITEMS\"",
+      "synthetic_input": {
+        "kind": "main_flow_synthetic_csv",
+        "frame": "VALID_BASELINE_TRIPLE（三行，9 列齐备，无重复、无缺列、无编码错误、无溢出）",
+        "pending_decisions_present": [
+          "platforms 解析规则",
+          "categories 解析规则",
+          "genres 解析规则"
+        ],
+        "invocation": "以 --input-main 指向该合成输入、--tree 取合法值",
+        "isolation_note": "本用例不注入任何数据阻断条件，以隔离“待决事项”这一独立因素。"
+      },
+      "expected_assertions": [
+        "进程退出码 == 4；顶层status == 'COMPLETED'；顶层verdict == 'NO_DATA_BLOCKER_WITH_OPEN_ITEMS'，须同时成立。",
+        "blocking_findings不存在或为空。",
+        "checks.checks_completed_this_run的stage集合恰为input_exists/config/environment/header/read/header_names/appid/dates/scope/english/required_age/entities/multivalue，共13项。",
+        "checks.checks_not_run_this_run == []；待决事项不等于计划检查未执行。",
+        "checks.pending_human_decisions非空；不要求待决事项只有三项。",
+        "field_audit_scope.rows_in_scope == 2；field_audit_scope.used_to_select_preprocessing == false。",
+        "不宣称完整流水线GO，不生成正式split或X/y；stdout为单个JSON，诊断走stderr，不写文件。"
+      ],
+      "audit_scope": "运行结论语义（无数据阻断 vs 待决事项 vs 成功）与覆盖记录键；不涉及待决解析规则实现",
+      "implementation_details_to_verify": [
+        "尚未运行：上述主流程断言。退出4表示预检完成但有待决事项，不能称数据阻断。"
+      ]
+    }
+  ],
+  "coverage_statement": {
+    "required_minimum_coverage": [
+      {
+        "requirement": "1. appid 空串与纯空白分别计数，计数非负",
+        "case": "C-01",
+        "status": "specified_not_run"
+      },
+      {
+        "requirement": "2. [\" \", \" \"]：raw 重复数 2、strip 重复数 0",
+        "case": "C-02",
+        "status": "specified_not_run",
+        "r1_fix": "已删除 R0 的错误说明“两种重复计数口径均为 2”。"
+      },
+      {
+        "requirement": "3. [\"1\", \" 1 \"]：strip 重复数 2，并触发重复阻断",
+        "case": "C-03",
+        "status": "specified_not_run"
+      },
+      {
+        "requirement": "4. 数值 1e309 不得归入有限数，须报告转换溢出",
+        "case": "C-04",
+        "status": "specified_not_run",
+        "r1_fix": "明确为 required_age；溢出计数 1、有限数 0；删除“不适用”分支与行级诊断要求，仅聚合输出。"
+      },
+      {
+        "requirement": "5. A;unknown 与 A;unknown;NULL：行内缺失计数均为 1，实体数仍为 1",
+        "case": "C-05",
+        "status": "specified_not_run",
+        "r1_fix": "字段改为 developer/publisher。"
+      },
+      {
+        "requirement": "6. A;;B 空 token 不计声明缺失词；A;A;B 去重但不误报空格",
+        "case": "C-06",
+        "status": "specified_not_run",
+        "r1_fix": "字段改为 developer/publisher；A;;B 实体数收敛为 2。"
+      },
+      {
+        "requirement": "7. UTC 跨年、NaT 及 <=2017 审计窗口；2018 字段异常不得驱动预处理",
+        "case": "C-07",
+        "status": "specified_not_run",
+        "r1_fix": "补合法 2016 行；2018 行注入 english=\"BAD\"、required_age=\"1e309\"；改用 rows_in_scope 与 used_to_select_preprocessing=false；不写成必然不可达。"
+      },
+      {
+        "requirement": "8. 缺列、编码错误与提前失败：后续未执行检查不得列为已完成",
+        "case": "C-08",
+        "status": "specified_not_run",
+        "r1_fix": "改用 checks_completed_this_run / checks_not_run_this_run 两键记录。"
+      },
+      {
+        "requirement": "9. 受限读取的验证方法，不访问结果列值",
+        "case": "C-09",
+        "status": "specified_not_run",
+        "r1_fix": "核查 usecols 恰为 9 列 + dtype/keep_default_na/na_filter；拒绝“读全表后丢列”。"
+      },
+      {
+        "requirement": "10. 有待决事项时，不把“无数据阻断”等同 exit 0",
+        "case": "C-10",
+        "status": "specified_not_run",
+        "r1_fix": "改为合法基准；断言 exit=4 且 verdict=\"NO_DATA_BLOCKER_WITH_OPEN_ITEMS\" 同时成立。"
+      }
+    ],
+    "r1_revision_checklist": [
+      {
+        "item": "C02 删除错误口径说明",
+        "applied": true
+      },
+      {
+        "item": "C04 绑定 required_age、删除不适用分支与行级诊断",
+        "applied": true
+      },
+      {
+        "item": "C05/C06 改测 developer/publisher",
+        "applied": true
+      },
+      {
+        "item": "不再统一用 \"_\" 填充；区分组件用例与主流程用例",
+        "applied": true,
+        "how": "level_definitions + valid_baseline_frame；组件用例只用被测字段的最小 frame。"
+      },
+      {
+        "item": "C07 补合法 2016 行并注入 2018 异常",
+        "applied": true
+      },
+      {
+        "item": "C09 核查 usecols 恰为 9 列与三个读取参数",
+        "applied": true
+      },
+      {
+        "item": "C10 使用合法基准、绑定 exit=4 与 verdict",
+        "applied": true
+      },
+      {
+        "item": "覆盖记录与字段窗口改用真实键名",
+        "applied": true
+      },
+      {
+        "item": "删除失效占位符、同步覆盖说明",
+        "applied": true
+      }
+    ],
+    "coverage_limits": [
+      "未执行任何用例；设计覆盖不等于运行通过。",
+      "缺失词nan/none/<na>、非ASCII空白和独立CLI缺参/非法tree用例尚未纳入。",
+      "platforms/categories/genres解析规则仍待决，不在本规范中冻结。",
+      "完整stdout schema、全部错误分支和未列出的appid域政策不在本次规范范围。"
+    ],
+    "assertion_binding_note": "原R1绑定的H04/config不变；本轮按实际源码明确输出键、函数返回形态与静态预期，不增加解析规则、生产接口或运行权限。",
+    "gpt_r2_amendments": [
+      "C01缺失blocker；C03组件/CLI边界；C04实际finite键；C05/C06单行聚合及whitespace；C07整数窗口和聚合；C08执行/阻断区分；C09完整行来源；C10完成检查与待决项区分。"
+    ]
+  },
+  "spec_listed_vs_verified": {
+    "note": "区分“规范已列出”与“实际执行通过”。本任务不运行任何代码。",
+    "spec_listed": [
+      "C-01..C-10 共 10 个用例、其合成输入与预期断言。",
+      "每条断言的来源绑定（H04 契约 / 修订给出的接口事实 / 合法基准）。",
+      "覆盖说明、覆盖限制、R1 修订清单。"
+    ],
+    "verified_pass": [],
+    "verified_pass_statement": "无。本轮未执行任何用例，不存在“实际执行通过”的断言；所有用例状态均为“规范已列出，未运行”。",
+    "not_run": "全部 10 个用例的局部运行与集成运行。"
+  },
+  "not_run_declaration": {
+    "statement": "仅完成文本整合和静态JSON检查，未执行用例。",
+    "details": [
+      "未执行H04或任何用例，未编写运行器；局部与集成运行均未开展。",
+      "仅读取附件和配置哈希；未读取CSV/凭据、未写文件、未安装、未训练、未联网。",
+      "产物哈希由GPT在静态检查中计算，不替代运行证据。"
+    ]
+  },
+  "facts_assumptions_unverified": {
+    "facts": [
+      "基线H04全文哈希与当前config哈希已由GPT核对。",
+      "R1 JSON可解析；GPT-R2为单一主控在内存中串行整合。",
+      "真实函数返回形态、聚合键、窗口计数类型及13项stage已从绑定源码核对。"
+    ],
+    "assumptions": [
+      "将来主流程用例的核心环境与合成输入满足future_execution_preconditions。",
+      "C09使用测试层spy；生产代码不新增接口。"
+    ],
+    "unverified": [
+      "全部组件和主流程用例尚未执行。",
+      "候选运行行为、依赖兼容性及组合回归尚未验证。",
+      "缺失词nan/none/<na>与非ASCII空白等原覆盖限制仍存在。"
+    ]
+  },
+  "deliverable_note": "STEAM-B03/T01/GPT-R2为R1的确定性文本修正：原R1不直接接受；本有效规范限静态文本，不代表局部或集成运行通过。",
+  "origin_report": {
+    "external_task_meta": {
+      "project": "STEAM",
+      "batch": "STEAM-B03",
+      "task_id": "T01",
+      "revision": "R1",
+      "role": "implement",
+      "artifact_type": "synthetic_boundary_case_spec",
+      "artifact_version": "1.1.0",
+      "supersedes": "T01/R0",
+      "read_only_inputs": [
+        "原任务正文",
+        "原R0回复",
+        "本次修订正文"
+      ],
+      "baseline": {
+        "baseline_id": "stage0_precheck.h04_r4",
+        "source_sha256_as_declared": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
+        "config_py_sha256_as_declared": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e",
+        "r0_artifact_sha256_as_declared": "098d1950426ee677322fdb0e32a03595f5e6fcdb22f02d7953ab394dfd5f317f",
+        "hash_computed_by_this_task": false,
+        "hash_note": "三个哈希均为共同输入引用转写，本任务无执行能力，未计算、未复算，不作为计算证据。"
+      },
+      "execution": {
+        "cases_executed": 0,
+        "unit_runs": "not_executed",
+        "integration_runs": "not_executed",
+        "runner_authored": false,
+        "local_file_access": false,
+        "csv_or_credentials_accessed": false,
+        "repo_written": false,
+        "installed_or_trained": false,
+        "network_called": false,
+        "config_or_tree_modified_or_frozen": false,
+        "scope_expanded": false
+      },
+      "authority_note": "仓库未提交改动归属未核实，本任务未读取、未触碰。"
+    },
+    "report_verification": "Only baseline references and text semantics checked; external execution claims not independently certified."
+  },
+  "future_execution_preconditions": [
+    "仅描述未来运行条件，本轮不授权或执行。",
+    "候选源码/config与绑定哈希一致；当前定义依赖v1.1字段和窗口。",
+    "主流程用例要求numpy/pandas可导入，且当前日期解析API可用；CLI选择合法tree，合成输入按声明编码构造。",
+    "组件用例只调用指定函数；CLI输出、退出码和coverage断言仅用于main-flow用例。"
+  ]
+}

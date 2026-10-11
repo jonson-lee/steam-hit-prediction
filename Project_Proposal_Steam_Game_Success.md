@@ -1,11 +1,11 @@
-# 小组项目提案（v1.1 会议标准同步稿）
+# 小组项目提案（业务v1.1 / 数据政策v1.2）
 
 ## 项目名称
 **Steam 游戏爆款预测：发行商如何用"发售前可得的信息"判断游戏能否成为爆款**
 
 - 课程：IBA6102 Machine Learning for Business
-- 状态：题目已锁定；数据验收 **Conditional Go**
-- 当前标准：2026-09-24 会议冻结的 v1.1，用户于2026-10-09正式指定。决议见 [docs/DECISIONS.md](docs/DECISIONS.md)，唯一机器配置见 [config.py](config.py)。
+- 状态：数据制作、EDA与正式交接验收已完成；建模尚未启动。单次快照的业务解释边界仍为 **Conditional Go**。
+- 当前标准：2026-09-24会议冻结业务v1.1，数据解析/交接采用v1.2，交接整理完成于2026-10-12。决议见 [docs/DECISIONS.md](docs/DECISIONS.md)，唯一机器配置见 [config.py](config.py)。
 
 ---
 

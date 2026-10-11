@@ -1,7 +1,5 @@
-# 处理结果
+# 正式数据与验收证据
 
-本目录用于保存通过 [config.py](../../config.py) v1.1规则验证的正式X/y交接文件。业务解释见 [PROJECT_CONTEXT.md](../../docs/PROJECT_CONTEXT.md)，完整会议决议见 [DECISIONS.md](../../docs/DECISIONS.md)。
+`steam_handoff_v12/`保存已通过真实文件验收的21个封存文件，保持原字节；`acceptance/`保存最终独立消费者、测试、EDA和整理核验记录。正式数据不提交GitHub，完整文件由微信交接ZIP提供。
 
-目前尚无已验证的正式交接文件。`STEP1 OUTPUT/` 的清洗与EDA可作只读参考，但其 `features_A_only.csv`、`label_final.csv` 的标签、切分与字段边界不符合v1.1，不直接复制为正式接口。
-
-后续从原始六表生成标签、切分和允许特征，按appid对齐，同时记录设计版本、切点、字段清单及各split计数；快照敏感性字段另存接口。先写入独立 `outputs/<阶段>/<UTC时间戳>/`，通过验证后形成交接文件，不覆盖原始输入或STEP1交付。数据文件不进入Git。
+先读[建模指南](../../docs/MODELING_HANDOFF.md)，运行`python -B -m scripts.load_modeling_data`核验。主X/y/态/切分元数据按appid关联；不要使用旧STEP1标签或切分，也不要直接把整个标签/元数据表拼入X。

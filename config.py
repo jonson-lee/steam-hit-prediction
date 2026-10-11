@@ -1,11 +1,18 @@
-"""Versioned Steam design contract, frozen by D-001 through D-023.
+"""Versioned Steam design and adopted data policies.
 
 Changing a design value requires a version bump and a decision-log entry.
 Raw-data hashes and file schemas remain dataset-integrity checks, not design knobs.
+v1.2 adds B05 data policies to the unchanged v1.1 business design. The policy
+snapshot does not implement a parser or certify any existing data artifact.
 """
 
-DESIGN_VERSION = "v1.1"
-DESIGN_FROZEN_DATE = "2026-09-24"
+DESIGN_VERSION = "v1.2"
+DESIGN_FROZEN_DATE = "2026-10-11"
+BASE_DESIGN_VERSION = "v1.1"
+BASE_DESIGN_FROZEN_DATE = "2026-09-24"
+PARSE_POLICY_VERSION = "steam-parse/v1"
+HANDOFF_CONTRACT_VERSION = "steam-handoff/v1"
+DATA_POLICY_IMPLEMENTATION_STATUS = "implemented_real_file_acceptance_pending"
 RELEASE_DATE_UTC = True
 RELEASE_DATE_ERRORS = "coerce"
 RELEASE_DATE_FORMAT = "mixed"
@@ -68,6 +75,98 @@ FORBIDDEN_PREDICTOR_COLUMNS = (
 FORBIDDEN_SOURCES = ("steamspy_tag_data.csv",)
 EVALUATION_TOP_FRACTION = 0.10
 
+# Adopted by the user's B05 policy confirmation, recorded as D-024/D-025.
+# These values are the machine policy source for the future implementation.
+# Existing classify/helpers are not made conforming by declaring this snapshot.
+DATA_PARSE_POLICY = {
+    "version": PARSE_POLICY_VERSION,
+    "implementation_status": DATA_POLICY_IMPLEMENTATION_STATUS,
+    "raw_input": {"mode": "literal_strings", "preserve_original": True},
+    "appid": {
+        "key_type": "string", "strip": True, "pattern": "[0-9]+",
+        "leading_zeros": "preserve", "minimum": 0,
+        "maximum": 9223372036854775807, "float_intermediate": False,
+        "order": "ASCII_lexicographic", "raw_output": "raw_appid",
+        "key_output": "appid", "duplicates_or_collisions": "block_no_dedup",
+        "apply_to": "primary_and_each_auxiliary_independently",
+    },
+    "missing": {
+        "order": "preserve_raw_then_strip_then_field_specific_token_match",
+        "classes": ("MISSING_EMPTY", "MISSING_WHITESPACE", "MISSING_DECLARED"),
+        "tokens": ENTITY_MISSING_TOKENS, "token_case_sensitive": False,
+        "token_fields": ("english", "required_age", "developer", "publisher",
+                         "platforms", "categories", "genres"),
+        "excluded_token_fields": ("appid", "release_date"),
+        "extend_with_na": False, "imputation": "none",
+    },
+    "english": {"literals": ("0", "1"), "storage": "nullable_Int8",
+                "invalid": "block", "missing": "preserve"},
+    "required_age": {
+        "mode": "MODE_INT", "pattern": r"[+-]?\d+",
+        "unicode_decimal_digits": True, "minimum": 0,
+        "storage_maximum": 9223372036854775807, "storage": "nullable_Int64",
+        "semantic_maximum": None, "float_intermediate": False,
+        "invalid": "block", "missing": "preserve",
+    },
+    "sequences": {
+        "fields": ("developer", "publisher", "platforms", "categories", "genres"),
+        "delimiter": ENTITY_DELIMITER, "trim_tokens": True,
+        "drop_empty_tokens": True, "deduplication": "original_spelling_first_seen",
+        "entity_case_sensitive": True, "unknown_tokens": "preserve_and_log",
+        "alternate_delimiters": "literal_characters",
+        "source_missing_wire_value": None, "source_missing_slot": "S_MISSING",
+        "nonmissing_empty_wire_value": (), "nonmissing_empty_slot": "S_EMPTY_LIST",
+        "missing_derived_sequence": (), "empty_string_element_source_output": False,
+        "capture_source_class_before_lossy_helper": True,
+    },
+    "platform_membership": {"method": "case_insensitive_exact_token",
+                            "tokens": ("windows", "mac", "linux"),
+                            "missing_value": False},
+    "sequence_counts": {"method": "length_after_deduplication",
+                        "missing_value": 0, "storage": "Int64"},
+    "ratings": {"pattern": "[0-9]+", "minimum": 0,
+                "maximum": 9223372036854775807, "storage": "Int64",
+                "sum": "exact_integer_checked_before_addition",
+                "invalid_in_base_population": "block_package_keep_population",
+                "invalid_outside_base_population": "diagnostic_only",
+                "indeterminate_comparison": "no_label_block_package"},
+    "uncovered_years": {"method": "isolate", "development_label": None,
+                        "retain_full_year_population_statistics": True},
+    "invalid_features": "block_package_preserve_raw_diagnostics",
+    "test_year_policy_selection": "forbidden_apply_confirmed_rules_only",
+}
+
+DATA_HANDOFF_POLICY = {
+    "version": HANDOFF_CONTRACT_VERSION,
+    "implementation_status": DATA_POLICY_IMPLEMENTATION_STATUS,
+    "format": "CSV_with_JSON_in_cell", "encoding": "utf-8",
+    "bom": False, "newline": "\n", "csv_quoting": "QUOTE_ALL",
+    "scalar_missing_sentinel": r"\N", "sentinel_collision": "block_and_version",
+    "boolean_literals": ("true", "false"),
+    "read": "literal_strings_then_explicit_column_schema_conversion",
+    "json": {"ensure_ascii": False, "allow_nan": False,
+             "separators": (",", ":"), "reject_duplicate_keys": True},
+    "states": ("S_MISSING", "S_EMPTY_LIST", "S_EMPTY_STRING_ELEMENT", "S_LIST"),
+    "reserved_source_state": "S_EMPTY_STRING_ELEMENT",
+    "source_class_storage": "x_entity_states.source_missing_classes",
+    "raw_parse_storage": "keys_meta.raw_parse_values",
+    "row_disposition_precedence": ("invalid_key", "invalid_date_nat",
+        "excluded_2019", "uncovered_year", "invalid_label_input",
+        "train", "validation", "test"),
+    "preserve_all_failure_codes": True,
+    "hash_direction": ("stable_files", "manifest", "validation_report", "HANDOFF_READY"),
+    "consumer_verification": "external_record_never_rewrite_sealed_report",
+    "history_window": HISTORY_YEAR_POLICY,
+    "history_fixed_2016_variant": "not_adopted_not_a_gate",
+    "raw_provenance": "OFF", "snapshot_sensitivity": "OFF", "mutable_pointer": "OFF",
+}
+
+
+def data_policy_contract():
+    """Independent policy snapshot; no parsing, data writes, fitting or validation."""
+    from copy import deepcopy
+    return {"parse": deepcopy(DATA_PARSE_POLICY), "handoff": deepcopy(DATA_HANDOFF_POLICY)}
+
 
 def assert_primary_feature_columns(columns):
     """Fail closed: only explicitly allowed primary inputs may enter X.
@@ -87,6 +186,13 @@ def design_contract():
     return {
         "version": DESIGN_VERSION,
         "frozen_date": DESIGN_FROZEN_DATE,
+        "business_design_base": {
+            "version": BASE_DESIGN_VERSION, "frozen_date": BASE_DESIGN_FROZEN_DATE,
+        },
+        "data_policy_versions": {
+            "parse": PARSE_POLICY_VERSION, "handoff": HANDOFF_CONTRACT_VERSION,
+            "implementation_status": DATA_POLICY_IMPLEMENTATION_STATUS,
+        },
         "release_date": {
             "utc": RELEASE_DATE_UTC, "errors": RELEASE_DATE_ERRORS, "format": RELEASE_DATE_FORMAT,
         },

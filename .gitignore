@@ -1,35 +1,30 @@
-# 原始数据与处理结果只保留在本地
-data/raw/*
-!data/raw/README.md
-data/processed/*
-!data/processed/README.md
+# Data, acceptance evidence and private modeling delivery stay local.
+/data/raw/*
+!/data/raw/README.md
+/data/processed/*
+!/data/processed/README.md
+/deliverables/*
+!/deliverables/README.md
+/reports/
+/outputs/*
+!/outputs/README.md
 *.csv
-
-# 每次运行输出与压缩包不入库
-outputs/*
-!outputs/README.md
+!docs/data_contract/field_dictionary.csv
+!docs/data_contract/source_map.csv
 *.zip
 
-# Python / Jupyter
-.ipynb_checkpoints/
-__pycache__/
-*.pyc
+# Internal task records are not team publication documents.
+/docs/NEXT.md
+/docs/JOURNAL.md
+
+# Local Python, notebook and operating-system files.
 .venv/
 venv/
-
-# 本机配置和凭据
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+*.log
 .env
 .env.*
 !.env.example
-
-# macOS
-.DS_Store
-
-# 日志
-*.log
-
-# 组员原交付含个人路径、派生数据及旧口径，仅本地审查
-STEP1 OUTPUT/
-
-# 新提供的只读会议原件；完整正文及采用说明在docs/DECISIONS.md维护
-/DECISIONS.md

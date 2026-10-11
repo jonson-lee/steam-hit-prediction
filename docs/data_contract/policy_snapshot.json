@@ -1,0 +1,366 @@
+{
+  "design": {
+    "version": "v1.2",
+    "frozen_date": "2026-10-11",
+    "business_design_base": {
+      "version": "v1.1",
+      "frozen_date": "2026-09-24"
+    },
+    "data_policy_versions": {
+      "parse": "steam-parse/v1",
+      "handoff": "steam-handoff/v1",
+      "implementation_status": "implemented_real_file_acceptance_pending"
+    },
+    "release_date": {
+      "utc": true,
+      "errors": "coerce",
+      "format": "mixed"
+    },
+    "target": {
+      "column": "hit_reviews",
+      "quantile": 0.9,
+      "interpolation": "linear",
+      "inclusive": true,
+      "minimum_cohort_size": null,
+      "excluded_release_years": [
+        2019
+      ]
+    },
+    "split": {
+      "train_max_year": 2016,
+      "validation_year": 2017,
+      "test_year": 2018
+    },
+    "history": {
+      "delimiter": ";",
+      "year_policy": "strictly_earlier_release_years",
+      "aggregation": "union_prior_games_deduplicated",
+      "count_transform": "log1p",
+      "alpha": 10.0,
+      "prior_mean": 0.1,
+      "missing_tokens": [
+        "unknown",
+        "nan",
+        "none",
+        "null",
+        "<na>"
+      ],
+      "rule_baseline_entity_weights": [
+        0.5,
+        0.5
+      ],
+      "features": [
+        "dev_prior_count",
+        "dev_prior_hit_rate",
+        "pub_prior_count",
+        "pub_prior_hit_rate"
+      ],
+      "rate_formula": "(union_hits + alpha * prior_mean) / (union_count + alpha)"
+    },
+    "calendar": {
+      "features": [
+        "release_month",
+        "release_quarter",
+        "release_day_of_week",
+        "release_month_sin",
+        "release_month_cos",
+        "release_day_of_week_sin",
+        "release_day_of_week_cos"
+      ],
+      "month_period": 12,
+      "month_origin": 1,
+      "day_of_week_period": 7,
+      "day_of_week_origin": 0
+    },
+    "feature_policy": {
+      "primary_raw_columns": [
+        "release_date",
+        "english",
+        "developer",
+        "publisher",
+        "platforms",
+        "required_age",
+        "categories",
+        "genres"
+      ],
+      "primary_features": [
+        "english",
+        "developer",
+        "publisher",
+        "platforms",
+        "required_age",
+        "categories",
+        "genres",
+        "has_windows",
+        "has_mac",
+        "has_linux",
+        "platform_count",
+        "category_count",
+        "genre_count",
+        "release_month",
+        "release_quarter",
+        "release_day_of_week",
+        "release_month_sin",
+        "release_month_cos",
+        "release_day_of_week_sin",
+        "release_day_of_week_cos",
+        "dev_prior_count",
+        "dev_prior_hit_rate",
+        "pub_prior_count",
+        "pub_prior_hit_rate"
+      ],
+      "metadata_only": [
+        "appid",
+        "name",
+        "release_date",
+        "release_date_utc",
+        "release_year",
+        "split"
+      ],
+      "sensitivity_only_snapshot_features": [
+        "price",
+        "achievements",
+        "is_free",
+        "is_free_true",
+        "price_zero_unknown",
+        "detailed_description",
+        "about_the_game",
+        "short_description",
+        "pc_requirements",
+        "mac_requirements",
+        "linux_requirements",
+        "minimum",
+        "recommended",
+        "header_image",
+        "screenshots",
+        "background",
+        "movies",
+        "website",
+        "support_url",
+        "support_email"
+      ],
+      "forbidden_predictors": [
+        "positive_ratings",
+        "negative_ratings",
+        "total_ratings",
+        "total_votes",
+        "positive_ratio",
+        "positive_rate",
+        "pos_rate",
+        "owners",
+        "owners_lo",
+        "owners_hi",
+        "owners_mid",
+        "owner_midpoint",
+        "log_owners_mid",
+        "average_playtime",
+        "median_playtime",
+        "steamspy_tags",
+        "tag_count",
+        "tag_votes",
+        "hit",
+        "hit_reviews",
+        "hit_quality",
+        "hit_B",
+        "hit_B_rank",
+        "hit_owner_inclusive",
+        "hit_att",
+        "hit_A"
+      ],
+      "forbidden_sources": [
+        "steamspy_tag_data.csv"
+      ],
+      "guard": "explicit_primary_whitelist_before_learned_expansion"
+    },
+    "top_fraction": 0.1
+  },
+  "data_policies": {
+    "parse": {
+      "version": "steam-parse/v1",
+      "implementation_status": "implemented_real_file_acceptance_pending",
+      "raw_input": {
+        "mode": "literal_strings",
+        "preserve_original": true
+      },
+      "appid": {
+        "key_type": "string",
+        "strip": true,
+        "pattern": "[0-9]+",
+        "leading_zeros": "preserve",
+        "minimum": 0,
+        "maximum": 9223372036854775807,
+        "float_intermediate": false,
+        "order": "ASCII_lexicographic",
+        "raw_output": "raw_appid",
+        "key_output": "appid",
+        "duplicates_or_collisions": "block_no_dedup",
+        "apply_to": "primary_and_each_auxiliary_independently"
+      },
+      "missing": {
+        "order": "preserve_raw_then_strip_then_field_specific_token_match",
+        "classes": [
+          "MISSING_EMPTY",
+          "MISSING_WHITESPACE",
+          "MISSING_DECLARED"
+        ],
+        "tokens": [
+          "unknown",
+          "nan",
+          "none",
+          "null",
+          "<na>"
+        ],
+        "token_case_sensitive": false,
+        "token_fields": [
+          "english",
+          "required_age",
+          "developer",
+          "publisher",
+          "platforms",
+          "categories",
+          "genres"
+        ],
+        "excluded_token_fields": [
+          "appid",
+          "release_date"
+        ],
+        "extend_with_na": false,
+        "imputation": "none"
+      },
+      "english": {
+        "literals": [
+          "0",
+          "1"
+        ],
+        "storage": "nullable_Int8",
+        "invalid": "block",
+        "missing": "preserve"
+      },
+      "required_age": {
+        "mode": "MODE_INT",
+        "pattern": "[+-]?\\d+",
+        "unicode_decimal_digits": true,
+        "minimum": 0,
+        "storage_maximum": 9223372036854775807,
+        "storage": "nullable_Int64",
+        "semantic_maximum": null,
+        "float_intermediate": false,
+        "invalid": "block",
+        "missing": "preserve"
+      },
+      "sequences": {
+        "fields": [
+          "developer",
+          "publisher",
+          "platforms",
+          "categories",
+          "genres"
+        ],
+        "delimiter": ";",
+        "trim_tokens": true,
+        "drop_empty_tokens": true,
+        "deduplication": "original_spelling_first_seen",
+        "entity_case_sensitive": true,
+        "unknown_tokens": "preserve_and_log",
+        "alternate_delimiters": "literal_characters",
+        "source_missing_wire_value": null,
+        "source_missing_slot": "S_MISSING",
+        "nonmissing_empty_wire_value": [],
+        "nonmissing_empty_slot": "S_EMPTY_LIST",
+        "missing_derived_sequence": [],
+        "empty_string_element_source_output": false,
+        "capture_source_class_before_lossy_helper": true
+      },
+      "platform_membership": {
+        "method": "case_insensitive_exact_token",
+        "tokens": [
+          "windows",
+          "mac",
+          "linux"
+        ],
+        "missing_value": false
+      },
+      "sequence_counts": {
+        "method": "length_after_deduplication",
+        "missing_value": 0,
+        "storage": "Int64"
+      },
+      "ratings": {
+        "pattern": "[0-9]+",
+        "minimum": 0,
+        "maximum": 9223372036854775807,
+        "storage": "Int64",
+        "sum": "exact_integer_checked_before_addition",
+        "invalid_in_base_population": "block_package_keep_population",
+        "invalid_outside_base_population": "diagnostic_only",
+        "indeterminate_comparison": "no_label_block_package"
+      },
+      "uncovered_years": {
+        "method": "isolate",
+        "development_label": null,
+        "retain_full_year_population_statistics": true
+      },
+      "invalid_features": "block_package_preserve_raw_diagnostics",
+      "test_year_policy_selection": "forbidden_apply_confirmed_rules_only"
+    },
+    "handoff": {
+      "version": "steam-handoff/v1",
+      "implementation_status": "implemented_real_file_acceptance_pending",
+      "format": "CSV_with_JSON_in_cell",
+      "encoding": "utf-8",
+      "bom": false,
+      "newline": "\n",
+      "csv_quoting": "QUOTE_ALL",
+      "scalar_missing_sentinel": "\\N",
+      "sentinel_collision": "block_and_version",
+      "boolean_literals": [
+        "true",
+        "false"
+      ],
+      "read": "literal_strings_then_explicit_column_schema_conversion",
+      "json": {
+        "ensure_ascii": false,
+        "allow_nan": false,
+        "separators": [
+          ",",
+          ":"
+        ],
+        "reject_duplicate_keys": true
+      },
+      "states": [
+        "S_MISSING",
+        "S_EMPTY_LIST",
+        "S_EMPTY_STRING_ELEMENT",
+        "S_LIST"
+      ],
+      "reserved_source_state": "S_EMPTY_STRING_ELEMENT",
+      "source_class_storage": "x_entity_states.source_missing_classes",
+      "raw_parse_storage": "keys_meta.raw_parse_values",
+      "row_disposition_precedence": [
+        "invalid_key",
+        "invalid_date_nat",
+        "excluded_2019",
+        "uncovered_year",
+        "invalid_label_input",
+        "train",
+        "validation",
+        "test"
+      ],
+      "preserve_all_failure_codes": true,
+      "hash_direction": [
+        "stable_files",
+        "manifest",
+        "validation_report",
+        "HANDOFF_READY"
+      ],
+      "consumer_verification": "external_record_never_rewrite_sealed_report",
+      "history_window": "strictly_earlier_release_years",
+      "history_fixed_2016_variant": "not_adopted_not_a_gate",
+      "raw_provenance": "OFF",
+      "snapshot_sensitivity": "OFF",
+      "mutable_pointer": "OFF"
+    }
+  },
+  "config_sha256": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
+  "adoption": "D-024/D-025/D-026/D-027"
+}

@@ -1,69 +1,76 @@
 # Steam Game Hit Prediction | Steam 游戏爆款预测
 
-IBA6102 Machine Learning for Business 小组项目，面向中小发行商的候选游戏筛选和排序。
+IBA6102 Machine Learning for Business 小组项目：用游戏属性和厂商历史进行候选游戏筛选与排序。**数据阶段已完成，建模尚未启动。** 当前政策为v1.2，业务规则保持2026-09-24会议冻结v1.1。
 
-**Current standard: v1.1, frozen on 2026-09-24.** The meeting decisions were adopted as the project authority on 2026-10-09. The executable design is defined in `config.py`.
+建模同学先读[交接指南](docs/MODELING_HANDOFF.md)，项目展示先读[EDA摘要](docs/EDA_SUMMARY.md)，本次更新见[CHANGELOG](CHANGELOG.md)。GitHub保存实现、测试和标准文档；正式数据、验收原始证据与展示图表由微信交接ZIP提供。
 
-**当前标准：2026-09-24 会议冻结的 v1.1。** 用户于 2026-10-09 指定会议决议为当前标准，并授权同步本地与云端。六表验收与 v1.1 厂商规则复现已完成；STEP1 OUTPUT 已审查，当前主模型接口与正式 ML 流水线待完成。
+## 文件结构
 
-## Standard and evidence | 标准与证据
+```text
+config.py                      唯一版本化业务/数据政策配置
+src/                           解析、交接验证、数据审计与路径管理
+scripts/                       数据读入、EDA复现、验收和打包入口
+tests/                         当前测试及冻结的历史基线
+docs/                          建模交接、标准、字段字典和验收摘要
+data/processed/                正式封存数据和验收证据（仅私下交接）
+reports/eda/                   展示报告、21张表和5对PNG/SVG（仅私下交接）
+deliverables/                  发给建模同学的完整ZIP（仅本地）
+outputs/                       以后复现运行的新UTC目录（仅本地）
+Project_Proposal_Steam_Game_Success.md  商业问题与方法计划
+CHANGELOG.md / JOURNAL.md       GitHub更新日志 / 团队进展摘要
+```
 
-| 内容 | 入口 |
-|---|---|
-| 会议决议原文与实施说明 | [DECISIONS.md](docs/DECISIONS.md) |
-| 唯一机器设计配置 | [config.py](config.py) |
-| 当前业务标准与进度 | [PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md) |
-| 数据验收与当前规则指标 | [DATA_AUDIT.md](docs/DATA_AUDIT.md) |
-| 商业问题与建模计划 | [项目提案](Project_Proposal_Steam_Game_Success.md) |
-| 数据来源、许可与准备 | [data/README.md](data/README.md) |
-| 探索入口 | [EDA_Steam.ipynb](EDA_Steam.ipynb) |
-| 更新记录 | [JOURNAL.md](JOURNAL.md) |
+详细保留范围见[文件指南](docs/FILE_GUIDE.md)。旧STEP1、协作实验、候选稿、重复candidate和历史运行目录已清除；必要测试fixtures保留。
 
-## Modeling contract | 建模标准
+## 建模交接
 
-- **Target:** `hit_reviews = 1` iff total ratings reach the within-release-year 90th percentile, using linear interpolation and inclusive `>=`. Small valid cohorts remain labeled; cutoff ties are retained.
-- **Split:** train ≤2016, validation 2017, final test 2018. All 2019 releases are excluded. No random split or shuffled CV.
-- **History:** split developer/publisher strings on `;`; use strictly earlier release years. Aggregate the union of matching historical games, counting each game once. Use `alpha=10`, fixed prior mean `0.10`, and `log1p` counts. Missing/unseen entities receive count 0 and rate 0.10.
-- **Calendar:** UTC date parsing with invalid values logged as `NaT`; month/quarter and cyclic month/day-of-week encodings.
-- **Forbidden predictors:** ratings, owners, playtime, SteamSpy tags/tag votes, `tag_count`, and outcome derivatives. IDs, labels, split and release year are association/partition fields.
-- **Snapshot sensitivity only:** price, achievements, descriptions, requirements, support, media and their derivatives.
-- **Evaluation:** AP/PR-AUC, ROC-AUC, Top10% precision/recall/lift. Transformations fit historical training data; parameters and thresholds are selected on validation.
-
-主标签衡量观测热度，不等于销量、收入、利润或质量。同年分组减少跨年的累积差异，不能消除同年观察时长差异。正类率接近10%由标签设计决定，不能证明没有漂移。
-
-`STEP1 OUTPUT/` 是本地保留的组员交付。其 v1.2 标签、2019 测试范围与 A-only 特征边界不符合当前 v1.1；修正前只供审查参考，不能作为主模型入口。
-
-## Setup and reproducibility | 运行与复现
-
-Python 3.11 or newer, from the repository root:
+解压微信ZIP，进入解压后的项目根目录，安装当前数据依赖并验证读入：
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m src.data_audit_reproduce
-python -m unittest discover -s tests -v
+python -B -m scripts.load_modeling_data
 ```
 
-Prepare the six CSVs in one directory. The main file is located using `STEAM_DATA_PATH`, `data/raw/steam.csv`, `data/raw/steam_store_games/steam.csv`, then the course-shared `../06_Datasets/steam/steam.csv`. No copy is required when the course data is present.
+应得到train **10,345**行、validation **6,357**行、test **8,160**行，每份X为**24列**。开发域共24,862行、2,500正类；2019的2,213行隔离。只克隆GitHub时需要另行取得交接ZIP中的`data/processed/`，不能直接从空数据目录开始训练。
 
-Raw inputs are read-only. Each run creates `outputs/data_audit/<UTC timestamp>/steam_data_audit.json`. Raw data, STEP1 personal delivery files, generated outputs, virtual environments and credentials remain local.
+读入入口先核验物理READY和文件哈希，严格解码CSV/JSON，按appid对齐X/y/切分元数据。它不拟合、训练或评估模型。
 
-## Current rule benchmark | 当前规则基准
+## 冻结标准
 
-Retrospective feasibility rule, using the v1.1 multi-entity historical union:
+- 主标签：同发行年评论总量linear q90，包含边界`>=`，保留早期小cohort。
+- 时间切分：train≤2016、validation=2017、test=2018；全部2019排除，禁止随机切分。
+- 历史：多厂商按`;`拆分，严格较早发行年游戏取并集去重；alpha=10、prior=0.10。count已做log1p，不再重复转换。窗口A的2018历史包含2017，模型与规则比较须统一窗口。
+- X仅24项白名单。appid、split、日期/年份元数据、标签及审计字段不作为预测变量；ratings、owners、playtime、SteamSpy tags/tag_count禁止进入X。price、achievements和辅助快照仅属后续敏感性分析。
+- 学习型填补、词表、one-/multi-hot、标准化仅在训练历史fit；参数和阈值在validation选择。报告AP/PR-AUC、ROC-AUC及Top10% precision/recall/lift，单独报告未见厂商表现。
 
-| Evaluation year | ROC-AUC | Average Precision | Expected Lift@10% |
-|---|---:|---:|---:|
-| 2017 | 0.686476 | 0.328394 | 4.225353 |
-| 2018 | 0.707903 | 0.336896 | 4.348139 |
+2018的描述性分布与标签人口已查看，须在后续记录中披露。2019单次快照支持回顾性筛选，不能证明真实发售前信息齐备，也不建立销量、因果效果或ROI结论。
 
-The 2018 rule uses history through 2017. Compare formal ML models against a rule fitted on the same history window. These are feasibility results, not final ML scores.
+## 验收与复现
 
-## Data and limitations | 数据与边界
+[正式验收摘要](docs/DATA_HANDOFF_ACCEPTANCE.md)记录18个稳定文件、3个控制文件和独立消费者结果。整理后保留正式21文件原字节，不重新生成READY。
 
-Source: Nik Davis, [Steam Store Games (Clean dataset)](https://www.kaggle.com/datasets/nikdavis/steam-store-games), CC BY 4.0 as reported by the source metadata. Six CSVs, main table 27,075 ×18, collected around May 2019.
+完整合成验收及测试须在Git克隆仓库执行，测试会记录真实HEAD；微信ZIP不包含`.git`。ZIP接收方直接使用上面的只读loader即可。需要复跑验收时，克隆本仓库并把交接数据复制到同名目录。
 
-This single snapshot does not prove launch-time attribute values or that historical hit labels were observable at the intended decision date. The project is a retrospective screening prototype; its evidence is non-causal and does not establish ROI.
+```bash
+python -B -m scripts.run_data_contract_tests
+python -B -m unittest discover -s tests -p test_modeling_loader.py -v
+python -B -m scripts.reproduce_data_eda --raw-directory /path/to/steam
+python -B -m scripts.build_modeling_handoff
+```
 
-小组成员姓名与学号不进入公开仓库。后续修改先更新版本配置与决议记录，再同步文档和实现。
+EDA复现另需六张原始CSV，原始数据不随默认交接ZIP提供。新运行写`outputs/<阶段>/<UTC>/`，不覆盖交接或展示材料。R4固定验收基线仅更新文档阶段和来源指针，保留R3旧绑定；配置、解析/交接实现和旧H04守卫不变。封存包中的合同与config阶段字段是制作时快照，当前完成状态以READY与验收摘要为准。
+
+## 标准与来源
+
+| 内容 | 入口 |
+|---|---|
+| 会议决定与授权 | [DECISIONS](docs/DECISIONS.md) |
+| 当前项目状态 | [PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md) |
+| 解析与交接合同 | [解析合同](docs/DATA_PARSE_CONTRACT.md)、[交接合同](docs/DATA_HANDOFF_CONTRACT.md) |
+| 实现验收与固定基线 | [实现摘要](docs/DATA_CONTRACT_IMPLEMENTATION.md) |
+| 原始数据来源与许可 | [data/README](data/README.md) |
+| 商业问题和建模计划 | [项目提案](Project_Proposal_Steam_Game_Success.md) |
+
+数据来源：Nik Davis的[Steam Store Games](https://www.kaggle.com/datasets/nikdavis/steam-store-games)，来源元数据标注CC BY 4.0。小组成员姓名、学号和本机配置不进入公开版本。

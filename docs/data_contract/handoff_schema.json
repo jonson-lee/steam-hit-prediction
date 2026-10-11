@@ -1,0 +1,497 @@
+{
+  "schema_version": "steam-handoff-schema/v1",
+  "design_version": "v1.2",
+  "business_base": "v1.1",
+  "parse_policy_ref": {
+    "version": "steam-parse/v1",
+    "source": "config.py:data_policy_contract().parse",
+    "status": "implemented; acceptance scope recorded separately"
+  },
+  "handoff_version": "steam-handoff/v1",
+  "implementation_status": "implemented_real_file_acceptance_pending",
+  "files": {
+    "handoff/x_primary.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "appid",
+        "english",
+        "developer",
+        "publisher",
+        "platforms",
+        "required_age",
+        "categories",
+        "genres",
+        "has_windows",
+        "has_mac",
+        "has_linux",
+        "platform_count",
+        "category_count",
+        "genre_count",
+        "release_month",
+        "release_quarter",
+        "release_day_of_week",
+        "release_month_sin",
+        "release_month_cos",
+        "release_day_of_week_sin",
+        "release_day_of_week_cos",
+        "dev_prior_count",
+        "dev_prior_hit_rate",
+        "pub_prior_count",
+        "pub_prior_hit_rate"
+      ],
+      "primary_key": [
+        "appid"
+      ],
+      "key_domain": "developed",
+      "row_order": [
+        "appid"
+      ],
+      "relation": "keys equal y_label; only appid+24 declared features"
+    },
+    "handoff/x_entity_states.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "appid",
+        "developer",
+        "publisher",
+        "platforms",
+        "categories",
+        "genres",
+        "source_missing_classes"
+      ],
+      "primary_key": [
+        "appid"
+      ],
+      "key_domain": "developed",
+      "row_order": [
+        "appid"
+      ],
+      "relation": "same appid keys as X; all state metadata removed before feature extraction"
+    },
+    "handoff/y_label.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "appid",
+        "hit_reviews",
+        "positive_ratings",
+        "negative_ratings",
+        "total_ratings",
+        "cohort_n",
+        "positive_in_cohort",
+        "cutoff_value",
+        "label_basis"
+      ],
+      "primary_key": [
+        "appid"
+      ],
+      "key_domain": "developed",
+      "row_order": [
+        "appid"
+      ],
+      "relation": "labels only train/validation/test; trace not in X"
+    },
+    "handoff/keys_meta.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "appid",
+        "raw_appid",
+        "name",
+        "release_date",
+        "release_date_utc",
+        "release_year",
+        "split",
+        "disposition",
+        "failure_codes",
+        "source_file",
+        "source_row_no",
+        "raw_parse_values",
+        "source_value_classes"
+      ],
+      "primary_key": [
+        "source_file",
+        "source_row_no"
+      ],
+      "key_domain": "all_main_source_records",
+      "row_order": [
+        "source_file",
+        "source_row_no"
+      ],
+      "relation": ""
+    },
+    "handoff/row_disposition.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "source_file",
+        "source_row_no",
+        "raw_appid",
+        "disposition",
+        "failure_codes",
+        "trigger_values",
+        "source_reference"
+      ],
+      "primary_key": [
+        "source_file",
+        "source_row_no"
+      ],
+      "key_domain": "all_main_source_records",
+      "row_order": [
+        "source_file",
+        "source_row_no"
+      ],
+      "relation": "master or exact master-filter view"
+    },
+    "handoff/rows_excluded.csv": {
+      "shape": "CSV_table",
+      "requiredness": "conditional_required",
+      "columns": [
+        "source_file",
+        "source_row_no",
+        "raw_appid",
+        "disposition",
+        "failure_codes",
+        "trigger_values",
+        "source_reference"
+      ],
+      "primary_key": [
+        "source_file",
+        "source_row_no"
+      ],
+      "key_domain": "disposition_excluded_2019",
+      "row_order": [
+        "source_file",
+        "source_row_no"
+      ],
+      "relation": "master or exact master-filter view"
+    },
+    "handoff/rows_invalid_unknown.csv": {
+      "shape": "CSV_table",
+      "requiredness": "conditional_required",
+      "columns": [
+        "source_file",
+        "source_row_no",
+        "raw_appid",
+        "disposition",
+        "failure_codes",
+        "trigger_values",
+        "source_reference"
+      ],
+      "primary_key": [
+        "source_file",
+        "source_row_no"
+      ],
+      "key_domain": "disposition_invalid_or_uncovered",
+      "row_order": [
+        "source_file",
+        "source_row_no"
+      ],
+      "relation": "master or exact master-filter view"
+    },
+    "handoff/raw_provenance.csv": {
+      "shape": "CSV_table",
+      "requiredness": "optional_OFF",
+      "columns": [
+        "source_file",
+        "source_row_no",
+        "appid",
+        "name",
+        "release_date",
+        "english",
+        "developer",
+        "publisher",
+        "platforms",
+        "required_age",
+        "categories",
+        "genres",
+        "positive_ratings",
+        "negative_ratings"
+      ],
+      "primary_key": [
+        "source_file",
+        "source_row_no"
+      ],
+      "key_domain": "all_main_source_records",
+      "row_order": [
+        "source_file",
+        "source_row_no"
+      ],
+      "relation": ""
+    },
+    "handoff/year_cutoffs.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "release_year",
+        "cohort_n",
+        "computable",
+        "cutoff_value",
+        "positive_n",
+        "developed_cohort_n",
+        "developed_positive_n",
+        "in_developed_domain",
+        "algorithm_id",
+        "parameter_ref"
+      ],
+      "primary_key": [
+        "release_year"
+      ],
+      "key_domain": "base_population_years",
+      "row_order": [
+        "release_year"
+      ],
+      "relation": "population and developed sums separated; illegal population never silently shrunk"
+    },
+    "handoff/history_source_membership.csv": {
+      "shape": "CSV_table",
+      "requiredness": "conditional_required",
+      "columns": [
+        "window_variant",
+        "target_appid",
+        "entity_kind",
+        "source_year",
+        "source_appid"
+      ],
+      "primary_key": [
+        "window_variant",
+        "target_appid",
+        "entity_kind",
+        "source_year",
+        "source_appid"
+      ],
+      "key_domain": "union_edges",
+      "row_order": [
+        "window_variant",
+        "target_appid",
+        "entity_kind",
+        "source_year",
+        "source_appid"
+      ],
+      "relation": "one union edge per target/kind/source/window; both-way complete reconstruction"
+    },
+    "handoff/aux_coverage.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "aux_table",
+        "source_rows",
+        "invalid_key_rows",
+        "duplicate_keys",
+        "extra_keys",
+        "missing_coverage",
+        "main_rows_before",
+        "main_rows_after"
+      ],
+      "primary_key": [
+        "aux_table"
+      ],
+      "key_domain": "aux_table_names",
+      "row_order": [
+        "aux_table"
+      ],
+      "relation": "each auxiliary independent; steam_appid source maps to canonical appid"
+    },
+    "handoff/sensitivity_snapshot.csv": {
+      "shape": "CSV_table",
+      "requiredness": "optional_OFF",
+      "columns": [
+        "appid",
+        "price",
+        "achievements",
+        "is_free",
+        "is_free_true",
+        "price_zero_unknown",
+        "detailed_description",
+        "about_the_game",
+        "short_description",
+        "pc_requirements",
+        "mac_requirements",
+        "linux_requirements",
+        "minimum",
+        "recommended",
+        "header_image",
+        "screenshots",
+        "background",
+        "movies",
+        "website",
+        "support_url",
+        "support_email"
+      ],
+      "primary_key": [
+        "appid"
+      ],
+      "key_domain": "developed",
+      "row_order": [
+        "appid"
+      ],
+      "relation": ""
+    },
+    "manifest/field_dictionary.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "file",
+        "column",
+        "role",
+        "logical_type",
+        "storage_type",
+        "nullable",
+        "missing_representation",
+        "domain",
+        "source",
+        "conversion",
+        "failure_route",
+        "policy_ref",
+        "learned_transform"
+      ],
+      "primary_key": [
+        "file",
+        "column"
+      ],
+      "key_domain": "delivered_field_definitions",
+      "row_order": [
+        "file",
+        "column"
+      ],
+      "relation": "self-description is schema metadata, not data hash inside itself"
+    },
+    "manifest/source_map.csv": {
+      "shape": "CSV_table",
+      "requiredness": "required",
+      "columns": [
+        "file",
+        "column",
+        "source_file",
+        "source_column",
+        "derivation",
+        "input_hash_binding"
+      ],
+      "primary_key": [
+        "file",
+        "column"
+      ],
+      "key_domain": "delivered_field_definitions",
+      "row_order": [
+        "file",
+        "column"
+      ],
+      "relation": ""
+    },
+    "handoff/history_windows.json": {
+      "shape": "JSON_object",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {
+        "cohort_windows": {
+          "key": [
+            "window_variant",
+            "release_year"
+          ],
+          "fields": [
+            "source_years",
+            "source_max_year",
+            "parameters",
+            "membership_digest"
+          ]
+        },
+        "target_windows": {
+          "key": [
+            "window_variant",
+            "target_appid",
+            "entity_kind"
+          ],
+          "fields": [
+            "source_years",
+            "source_max_year"
+          ],
+          "empty_source_max_year": null
+        }
+      }
+    },
+    "manifest/codebook.json": {
+      "shape": "JSON_object",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {
+        "failure_codes": {
+          "shape": "keyed_object",
+          "key": "object_property_name",
+          "value_fields": [
+            "severity",
+            "meaning"
+          ]
+        }
+      }
+    },
+    "manifest/design_contract_snapshot.json": {
+      "shape": "JSON_object",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {}
+    },
+    "manifest/handoff_schema.json": {
+      "shape": "JSON_object",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {}
+    },
+    "manifest/parse_contract.md": {
+      "shape": "document",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {}
+    },
+    "manifest/handoff_contract.md": {
+      "shape": "document",
+      "requiredness": "required",
+      "primary_key": null,
+      "row_order": null,
+      "record_sets": {}
+    }
+  },
+  "stable_inventory_rule": "enabled stable files only; manifest/report/READY excluded",
+  "control_files": {
+    "manifest/manifest.json": {
+      "hashes": "stable files only"
+    },
+    "manifest/validation_report.json": {
+      "binds": [
+        "manifest_sha256"
+      ],
+      "scope": [
+        "synthetic",
+        "real-file"
+      ],
+      "overall": [
+        "pass",
+        "fail",
+        "blocked"
+      ]
+    },
+    "manifest/HANDOFF_READY.json": {
+      "binds": [
+        "manifest_sha256",
+        "report_sha256"
+      ],
+      "on_success_only": true
+    }
+  },
+  "field_dictionary": "field_dictionary.csv",
+  "float_wire": "round-trip decimal representation for IEEE754 float64; finite only; independent formula comparison absolute tolerance1e-12",
+  "CSV_reader": "dtype=str keep_default_na=False na_values=[configured sentinel]; explicit column conversion; JSON files decode as JSON, not CSV",
+  "disabled_defaults": [
+    "handoff/raw_provenance.csv",
+    "handoff/sensitivity_snapshot.csv",
+    "data/processed/CURRENT_HANDOFF.json"
+  ],
+  "main_record_domain": "steam.csv records only; auxiliary identities diagnosed separately",
+  "formal_production_status": "NOT_STARTED"
+}

@@ -1,0 +1,2632 @@
+{
+  "parse_policy": "steam-parse/v1",
+  "handoff_contract": "steam-handoff/v1",
+  "P05": [
+    {
+      "id": "P05-APPID-01",
+      "original_proposal_cells": [
+        "`\" 0012 \"`",
+        "`appid_parsed=\"0012\"`（不去零），分类 `finite_integer`，记账 leading-zero",
+        "无（WARN_LEADING_ZERO）",
+        "`\" 0012 \"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-02",
+      "original_proposal_cells": [
+        "`\"12\"`",
+        "`appid_parsed=\"12\"`",
+        "无",
+        "`\"12\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-03",
+      "original_proposal_cells": [
+        "同批含 `\" 0012 \"` 与 `\"12\"`",
+        "唯一性：strip 基数下**不碰撞**（`\"0012\"≠\"12\"`）；若采纳去零规范化则**必然碰撞** → 必须报碰撞并按 PP-APPID-10 处理；**不得**自动去重/改键",
+        "采纳规范化时 `ERR_APPID_NORMALISATION_COLLISION`",
+        "两行原值"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-04",
+      "original_proposal_cells": [
+        "`\"0\"`",
+        "`appid_parsed=\"0\"`，合法（`^[0-9]+$` 通过）；不去零、不视为缺失",
+        "无",
+        "`\"0\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-05",
+      "original_proposal_cells": [
+        "`\"+12\"`",
+        "非法（含符号）",
+        "`ERR_APPID_ILLEGAL`",
+        "`\"+12\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-06",
+      "original_proposal_cells": [
+        "`\"12.0\"`",
+        "非法（含小数点）",
+        "`ERR_APPID_ILLEGAL`",
+        "`\"12.0\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-07",
+      "original_proposal_cells": [
+        "`\"１２\"`（U+FF11 U+FF12 全角）",
+        "非法（非 ASCII 数字）",
+        "`ERR_APPID_ILLEGAL`",
+        "`\"１２\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-08",
+      "original_proposal_cells": [
+        "`\"٠١\"`（U+0660 U+0661 阿拉伯-印度数字）",
+        "非法（非 ASCII 数字）",
+        "`ERR_APPID_ILLEGAL`",
+        "`\"٠١\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-09",
+      "original_proposal_cells": [
+        "`\"9223372036854775808\"`",
+        "合法数字串但超 int64 上界（仅比较时 `lstrip(\"0\")`，不改键）",
+        "`ERR_APPID_OUT_OF_INT64`",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-10",
+      "original_proposal_cells": [
+        "`\"\"`",
+        "缺失类 **`MISSING_EMPTY`**（与 P05-APPID-11 不合并）",
+        "`APPID_MISSING`",
+        "`\"\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-11",
+      "original_proposal_cells": [
+        "`\"   \"`",
+        "缺失类 **`MISSING_WHITESPACE`**（与 P05-APPID-10 不合并）",
+        "`APPID_MISSING`",
+        "`\"   \"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-12",
+      "original_proposal_cells": [
+        "`\"9223372036854775807\"`",
+        "合法，等于 int64 上界",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-APPID-13",
+      "original_proposal_cells": [
+        "`\"unknown\"`",
+        "非法标识（词表不外延到 appid，唯一结论）",
+        "`ERR_APPID_ILLEGAL`",
+        "`\"unknown\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-01",
+      "original_proposal_cells": [
+        "`\" 1 \"`",
+        "逻辑值 `1`",
+        "无",
+        "`\" 1 \"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-02",
+      "original_proposal_cells": [
+        "`\"1.0\"`",
+        "非法（非字面 `\"1\"`）",
+        "`ERR_ENGLISH_ILLEGAL`",
+        "`\"1.0\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-03",
+      "original_proposal_cells": [
+        "`\" UNKNOWN \"`",
+        "缺失类 `MISSING_DECLARED`（PP-MISS-01：先 strip 再比较）。**修正前**现状会落到 `other_unparseable`/非法",
+        "无",
+        "`\" UNKNOWN \"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-04",
+      "original_proposal_cells": [
+        "`\"\"`",
+        "缺失类 `MISSING_EMPTY`",
+        "无",
+        "`\"\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-05",
+      "original_proposal_cells": [
+        "`\"bad\"`",
+        "非法非空",
+        "`ERR_ENGLISH_ILLEGAL`",
+        "`\"bad\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-06",
+      "original_proposal_cells": [
+        "`\"+1\"`",
+        "非法（字面域外）",
+        "`ERR_ENGLISH_ILLEGAL`",
+        "`\"+1\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-07",
+      "original_proposal_cells": [
+        "`\"true\"`",
+        "非法（字面域外）",
+        "`ERR_ENGLISH_ILLEGAL`",
+        "`\"true\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENG-08",
+      "original_proposal_cells": [
+        "`\"0\"`",
+        "逻辑值 `0`（**合法 0 ≠ 缺失**：三态可分）",
+        "无",
+        "`\"0\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-01",
+      "original_proposal_cells": [
+        "`\"0\"`",
+        "推荐 MODE-INT：逻辑值 `0`（合法 0，不是缺失）；备选 MODE-FLOAT 同",
+        "无",
+        "`\"0\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-02",
+      "original_proposal_cells": [
+        "`\"-1\"`",
+        "两模式一致：负数拒绝，**不变缺失、不裁剪、不删行、不置 0**",
+        "`ERR_AGE_NEGATIVE`",
+        "`\"-1\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-03",
+      "original_proposal_cells": [
+        "`\"12.5\"`",
+        "MODE-INT：词法拒（逻辑类型无值）；MODE-FLOAT：逻辑值 `12.5`（float）",
+        "MODE-INT `ERR_AGE_NON_INTEGER`；MODE-FLOAT 无",
+        "`\"12.5\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-04",
+      "original_proposal_cells": [
+        "`\"1e2\"`",
+        "MODE-INT：词法拒（**先判词法，不转换**）；MODE-FLOAT：逻辑值 `100.0`（float）",
+        "MODE-INT `ERR_AGE_NON_INTEGER`；MODE-FLOAT 无",
+        "`\"1e2\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-05",
+      "original_proposal_cells": [
+        "`\"1e309\"`",
+        "MODE-INT：词法含指数即拒 → `ERR_AGE_NON_INTEGER`（**不报 overflow**）；MODE-FLOAT：词法通过、转换后非有限 → `ERR_AGE_OVERFLOW`",
+        "按模式分列（见左）",
+        "`\"1e309\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-06",
+      "original_proposal_cells": [
+        "`\"inf\"`",
+        "两模式一致：非有限字面量",
+        "`ERR_AGE_NON_FINITE`",
+        "`\"inf\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-07",
+      "original_proposal_cells": [
+        "`\"NaN\"`",
+        "两模式一致：`\"nan\"` ∈ `config.py:24` → 缺失类 `MISSING_DECLARED`",
+        "无",
+        "`\"NaN\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-08",
+      "original_proposal_cells": [
+        "`\" NA \"`",
+        "两模式一致：`\"na\"` 不在词表 → 不可解析（词表是否加 `na` 见 U14/E-14）",
+        "`ERR_AGE_UNPARSEABLE`",
+        "`\" NA \"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-09",
+      "original_proposal_cells": [
+        "`\"\"`",
+        "缺失类 `MISSING_EMPTY`",
+        "无",
+        "`\"\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-10",
+      "original_proposal_cells": [
+        "`\"12\"`",
+        "推荐 MODE-INT：逻辑值 `12`（integer）；备选 MODE-FLOAT：`12.0`（float）",
+        "无",
+        "`\"12\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-11",
+      "original_proposal_cells": [
+        "`\"1e-999\"`",
+        "MODE-INT：指数词法拒绝；MODE-FLOAT：正的非零原值转换为0不得静默放行（建议预期未运行）",
+        "MODE-INT `ERR_AGE_NON_INTEGER`；MODE-FLOAT `ERR_AGE_UNDERFLOW`",
+        "`\"1e-999\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-AGE-12",
+      "original_proposal_cells": [
+        "`\"-1e-999\"`",
+        "MODE-INT：指数词法拒绝；MODE-FLOAT：负的非零原值即使转换为-0.0仍拒绝，按优先级不再报UNDERFLOW（建议预期未运行）",
+        "MODE-INT `ERR_AGE_NON_INTEGER`；MODE-FLOAT `ERR_AGE_NEGATIVE`",
+        "`\"-1e-999\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-01",
+      "original_proposal_cells": [
+        "`\"A; B;A;; unknown \"`",
+        "逻辑列表 `(\"A\",\"B\")`：拆 `;`→`[\"A\",\" B\",\"A\",\"\",\" unknown \"]`→trim→丢空→丢缺失词（`\"unknown\"` 大小写不敏感）→按原拼写去重保序",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-02",
+      "original_proposal_cells": [
+        "`\"A;a\"`",
+        "逻辑列表 `(\"A\",\"a\")`——**大小写敏感、不合并**（两个实体）",
+        "无",
+        "`\"A;a\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-03",
+      "original_proposal_cells": [
+        "`\"A,B\"`",
+        "逻辑列表 `(\"A,B\")`——`\",\"` 不是分隔符，按字面保留为单个实体",
+        "无（WARN_SUSPECT_DELIMITER_PRESENT）",
+        "`\"A,B\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-04",
+      "original_proposal_cells": [
+        "`\"unknown\"`",
+        "逻辑列表 `()`，行视为缺失实体",
+        "无",
+        "`\"unknown\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-05",
+      "original_proposal_cells": [
+        "`\"\"` / `\"   \"`",
+        "逻辑列表 `()`，分别 `MISSING_EMPTY` / `MISSING_WHITESPACE`",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-ENT-06",
+      "original_proposal_cells": [
+        "`\"A;B;A\"`",
+        "`(\"A\",\"B\")`；历史并集去重按历史 appid 计，不按实体重复计",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-01",
+      "original_proposal_cells": [
+        "platforms `\" windows ;mac;windows;; \"`",
+        "逻辑列表 `(\"windows\",\"mac\")`；`platform_count=2`；`has_windows=True`、`has_mac=True`、`has_linux=False`",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-02",
+      "original_proposal_cells": [
+        "platforms `\"notwindows\"`",
+        "单 token 未知；`has_windows=**False**`（**精确 token 比较，非 substring**）；`platform_count=1`",
+        "无",
+        "`\"notwindows\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-03",
+      "original_proposal_cells": [
+        "platforms `\"Windows;LINUX\"`",
+        "逻辑列表保留原拼写 `(\"Windows\",\"LINUX\")`；`casefold` 精确成员判定 → `has_windows=True`、`has_linux=True`、`has_mac=False`；`platform_count=2`",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-04",
+      "original_proposal_cells": [
+        "platforms `\"windows\\|linux\"`",
+        "不拆分（`\\|` 非分隔符）→ 单 token 未知；**`has_windows=False`、`has_mac=False`、`has_linux=False`**（精确 token，不用 substring）；`platform_count=1`",
+        "无（WARN_MIXED_DELIMITER）",
+        "`\"windows\\|linux\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-05",
+      "original_proposal_cells": [
+        "platforms `\"[windows,mac]\"`",
+        "不 eval、不猜语法 → 单 token 未知（含括号与逗号字面）；`has_windows=False`、`has_mac=False`；`platform_count=1`；同时 `rows_wrapped_in_brackets` 证据计数 +1",
+        "无",
+        "`\"[windows,mac]\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-06",
+      "original_proposal_cells": [
+        "platforms `\"unknown\"`",
+        "缺失类 `MISSING_DECLARED`（整格仅缺失词）→ 逻辑列表 `()`；`platform_count=0`；三个 has_* 均 False",
+        "无",
+        "`\"unknown\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-07",
+      "original_proposal_cells": [
+        "categories `\"Action;Action;Indie;unknown\"`",
+        "逻辑列表 `(\"Action\",\"Indie\")`；`category_count=2`；inline 缺失词仅丢该 token",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-08",
+      "original_proposal_cells": [
+        "genres `\"Action,Indie\"`",
+        "不拆分 → 单 token 未知；`genre_count=1`；`has_*` 不适用",
+        "无（WARN_MIXED_DELIMITER）",
+        "`\"Action,Indie\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-09",
+      "original_proposal_cells": [
+        "categories `\"Action; action \"`",
+        "**推荐口径（按原拼写去重）**：`(\"Action\",\"action\")`，`category_count=2`；**备选口径（大小写不敏感去重）**：`(\"Action\",)`，`category_count=1`。推荐与备选均未采用；两者都须必要决定/证据后才能实现（E-08）",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-10",
+      "original_proposal_cells": [
+        "platforms `\"\"` / `\"   \"`",
+        "`MISSING_EMPTY` / `MISSING_WHITESPACE`（两行分开列示，不合并）；`platform_count=0`",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-MV-11",
+      "original_proposal_cells": [
+        "platforms `\"Windows;windows\"`",
+        "**推荐口径**：`(\"Windows\",\"windows\")`，`platform_count=2`，`has_windows=True`；**备选口径**：`(\"Windows\",)`，`platform_count=1`，`has_windows=True`。两口径互斥（与 P05-MV-09 同一策略）",
+        "无",
+        "`\"Windows;windows\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-DATE-01",
+      "original_proposal_cells": [
+        "`\"2016-12-31T23:30:00-05:00\"`",
+        "按固定参数解析后 UTC 折算 `2017-01-01T04:30:00Z`；`release_year=2017`；原串保留",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-DATE-02",
+      "original_proposal_cells": [
+        "`\"bad-date\"`",
+        "`release_date_utc=NaT`、`release_year=missing`；记日志；**不删行**、不分桶",
+        "无（coerce 记录）",
+        "`\"bad-date\"`"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "P05-DATE-03",
+      "original_proposal_cells": [
+        "`\"2018-12-31\"`",
+        "无偏移输入按已冻结的 `UTC=True`/`errors=\"coerce\"`/`format=\"mixed\"` 解析（`config.py:9-11`，实现 `scripts/validate_steam_data.py:138-143`）；GPT 已实测 → `2018-12-31 00:00:00+00:00`，`release_year=2018`。**无新增时区待决项**；原串保留",
+        "无",
+        "原串"
+      ],
+      "source": "docs/DATA_PARSE_CONTRACT.md",
+      "source_sha256": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T01-parse-proposal-GPT-candidate-R3.md",
+        "sha256": "165c15329704b54a3ac128291e215637953a6582d902793a5405293dd8b9245c",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    }
+  ],
+  "H05": [
+    {
+      "id": "H05-KEY-01",
+      "original_proposal_cells": [
+        "每个关系表及 JSON 记录集合按 manifest.key_domains 与 B2 声明的主键在其键域内唯一；单对象 JSON 明确 schema_shape=object、主键不适用，不执行记录唯一性断言",
+        "任一适用主键重复，或关系表/记录集合无主键声明",
+        "BLOCK",
+        "report.keys.per_file 的键列、域行数与重复计数",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-02",
+      "original_proposal_cells": [
+        "参与 join 的 appid 规范化在开发域内单射：两条不同原文不得映射为同一规范键",
+        "同域内两条原文映射同一规范键",
+        "BLOCK",
+        "碰撞样本（raw_appid 逐字加 source_file 加 source_row_no）",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-03",
+      "original_proposal_cells": [
+        "记录身份闭合：每个主表源数据记录恰有一个身份 (source_file, source_row_no)，且 keys_meta、row_disposition、raw_provenance（若开启）的身份集相等",
+        "身份缺失、重复或三处不等",
+        "BLOCK",
+        "三处身份集双向差集计数（须为 0）",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-04",
+      "original_proposal_cells": [
+        "全行守恒：各 disposition 计数之和等于 source_records，且每记录恰一个主 disposition",
+        "差值非 0，或一记录多主去向或无主去向",
+        "BLOCK",
+        "manifest.conservation 四项实值",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-05",
+      "original_proposal_cells": [
+        "disposition 判定顺序唯一：按 manifest.disposition_precedence 取第一个命中为主去向；labeled_in_scope 分支必须展开为 train、validation、test 三个实际值；manifest.dispositions、codebook 与 row_disposition 三处枚举逐字一致",
+        "判定顺序与 codebook 不一致、主去向多值、或枚举残留 labeled_in_scope",
+        "BLOCK",
+        "codebook 版本、逐行判定样本与三处枚举差集",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-06",
+      "original_proposal_cells": [
+        "投影闭合：X 与 y 在开发域上键集相等，且共享对齐元数据逐行相等；X 载荷列按 x_primary 的 schema 验证，y 载荷列按 y_label 的 schema 验证",
+        "键集不等、元数据不等，或出现要求 X 与 y 全部字段相等的写法（该写法本身即合同错误）",
+        "BLOCK",
+        "join 后行数、键差集计数、元数据不等计数、两侧 schema 各自的列违规计数",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-07",
+      "original_proposal_cells": [
+        "副视图可由主表过滤复算：rows_excluded 与 rows_invalid_unknown 的行集与主表按 disposition 过滤结果逐一相等，四类 invalid 与 uncovered 计数与主表分类一致",
+        "任一等式不成立",
+        "BLOCK",
+        "逐类行数与差集计数",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-08",
+      "original_proposal_cells": [
+        "域内行序：每文件在其键域内按声明全序排列；键摘要按 manifest.key_domains.digest_encoding 的规范 JSON 编码计算，禁止裸字符串拼接",
+        "域内乱序、序规则未声明、或摘要编码不符",
+        "BLOCK",
+        "每文件的 row_order_rule 实值与键摘要",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-09",
+      "original_proposal_cells": [
+        "禁止偶然位置对齐：对同域键做确定性打乱后重读，任何按 join 的对齐结果不变；历史结果按 appid 对齐后重排不变（既有实现内部使用行位置，validate:220-233，不要求重构，只要求可由 appid 对齐复现）",
+        "结果随行位置改变，或对齐后任一值变化",
+        "BLOCK",
+        "扰动用例 ID 加前后 join 与历史列的按 appid 对齐差值（须为 0）",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-KEY-10",
+      "original_proposal_cells": [
+        "坏键与重复键不静默消失：以 disposition 为 invalid_key 进入 row_disposition，保留 raw_appid 逐字与身份列；该 appid 不得出现在 X、y 或开发域投影，也不得参与任何 join",
+        "记录缺失、身份无法对账、或坏键混入 X 与 y",
+        "BLOCK",
+        "invalid_key 计数与样本引用（只含相对路径与行号）",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Invalid appid must not join by canonical or raw key; source identity joins remain required for conservation.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-01",
+      "original_proposal_cells": [
+        "X 列名集合、数量、顺序 三者 == config 24",
+        "缺列/多列/乱序（config 自身不查，F-2）",
+        "BLOCK",
+        "逐列 diff 表",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-02",
+      "original_proposal_cells": [
+        "appid 在 assert 前已被显式 drop，且 columns_before_drop 留痕",
+        "未留痕或 assert 入参含 envelope",
+        "BLOCK",
+        "提取步骤记录",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-03",
+      "original_proposal_cells": [
+        "黑名单改名等价物不得入 X（tag_、hit、_ratio、log_owners_、owners_、_playtime、total_ratings）",
+        "语义映射命中",
+        "BLOCK",
+        "命名列 + 映射表版本",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-04",
+      "original_proposal_cells": [
+        "未授权新增列（含 _missing/_unknown indicator、cutoff 衍生、target 衍生）",
+        "任一出现",
+        "BLOCK",
+        "白名单 diff",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-05",
+      "original_proposal_cells": [
+        "快照敏感性列未混入主 X",
+        "任一出现",
+        "BLOCK",
+        "列名与 config.py:54–60 对照",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-06",
+      "original_proposal_cells": [
+        "steamspy_tag_data.csv 未被任何 X 列引用为来源",
+        "来源映射含该文件作特征源",
+        "BLOCK",
+        "source_map + 读取日志",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-07",
+      "original_proposal_cells": [
+        "release_date/release_year/split/name 不入 X（仅日历衍生入）",
+        "任一出现",
+        "BLOCK",
+        "列名对照 config.py:53",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-X-08",
+      "original_proposal_cells": [
+        "无任何学习型展开/词表/multi-hot/one-hot/imputer/scaler/CSR 被 fit",
+        "出现 fitted artifact",
+        "BLOCK",
+        "manifest.files 类型清单 + 禁产声明",
+        "build/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-01",
+      "original_proposal_cells": [
+        "严格 JSON：json.dumps 编码设 allow_nan=False；json.loads 解码由 parse_constant 拒绝 NaN/Infinity、object_pairs_hook 拒绝重复键，标准解析器拒绝尾随逗号",
+        "宽容解析通过，或出现上述任一字面量",
+        "BLOCK",
+        "解析器标识与版本、失败样本",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-02",
+      "original_proposal_cells": [
+        "finite 检查只针对非缺失的浮点值；缺失是否被允许由该列 field_dictionary 的存储类型与 PPR 决定；整数列使用精确整数域与上下界检查，禁止把整数转换成浮点后再用 finite 作为整数合法性证据",
+        "非缺失浮点值非有限，或声明为非缺失的列出现缺失，或以浮点finite替代整数域检查",
+        "BLOCK",
+        "每列非有限值计数与缺失计数，且须等于该列声明值",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-03",
+      "original_proposal_cells": [
+        "四槽位往返：值列与 x_entity_states 态列同时往返，decode(encode(v)) 逐行等于原值，全表零例外",
+        "任一行折叠、态丢失，或缺失被写成空列表",
+        "BLOCK",
+        "四槽位合成用例矩阵与全表差异行数",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Missing source wire value null+S_MISSING, nonmissing zero entities []+S_EMPTY_LIST; count0/hasFalse for missing; source subcategory simultaneously preserved; reserved empty-string-element not a legal source output.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-04",
+      "original_proposal_cells": [
+        "含分号、逗号、双引号与换行的实体值不产生歧义；禁止以分号连接作为存储格式",
+        "两个不同逻辑值映射为同一文本",
+        "BLOCK",
+        "歧义样本对与两侧文本",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-05",
+      "original_proposal_cells": [
+        "缺失哨兵（反斜杠加 N）不得作为真实数据值出现",
+        "任一单元格恰等于哨兵字面量",
+        "BLOCK",
+        "命中行号与列名",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-06",
+      "original_proposal_cells": [
+        "字面读入 转 按 (file,column) 转换表显式转换 转 转换后类型等于声明存储类型；转换异常必须落入声明的 failure_code 路由；禁止静默 coerce、默认值填充与 object 承载数字或混合类型。各列遵从自身 schema 与 PPR：不得把标签输入的十进制字面域推广给 required_age，也不得推广给所有整数列",
+        "类型偏离、异常未路由、出现静默 coerce，或字面域跨列推广",
+        "BLOCK",
+        "每列逻辑/存储类型表、异常样本与路由计数、推广检查的正反用例；字面读入阶段字符串承载合法，转换后按schema验收",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-07",
+      "original_proposal_cells": [
+        "文本参数逐字符合 B1：UTF-8 无 BOM、行终止符为换行、QUOTE_ALL、显式空串 newline；读回参数 keep_default_na 为 False 且 na_values 仅含声明哨兵",
+        "任一参数偏离",
+        "BLOCK",
+        "首字节检查、写参记录与读参记录",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-08",
+      "original_proposal_cells": [
+        "表示槽位的捕获必须先于任何有损 helper：validate:192-195 的 split_entities 会把缺失、空白与纯缺失词一律折叠为空元组，故态必须在拆分与去重之前落表",
+        "顺序颠倒，或态列由折叠后的值反推",
+        "BLOCK",
+        "构建步骤序列与态捕获点位置引用",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-SER-09",
+      "original_proposal_cells": [
+        "B4 的三层表述（逻辑值、JSON 文本、磁盘单元格）在文档与代码中不得混写；每个示例单元格必须由实现用 stdlib 的 json.dumps 与 csv.writer 以 B1 参数逐字写回再解码复验，逐例比对磁盘字节。本轮未执行任何编解码，故该复验属待复验清单而非已验证结论",
+        "任一层混写，或存在未经逐例复验的示例被当作已验证",
+        "BLOCK",
+        "逐例名单、每例的三层文本与复验结论（本轮全部标未复验）",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Source null versus nonmissing [] remains distinct. The codec reserved empty-string-element slot is tested only as representation and never emitted by source parsing. Historical proposal examples remain historical; current actual codec/full-table results are recorded per execution.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-01",
+      "original_proposal_cells": [
+        "基础人口内 positive_ratings 与 negative_ratings 的字面域与转换顺序逐字符合 C3；基础人口外异常只记诊断，不参与 cutoff：strip 后整体匹配 ^[0-9]+$，直接转 Int64，值在 0 到 9223372036854775807 之间，不经 float 中转",
+        "任一值违反字面域或值域",
+        "BLOCK（建议整包，见 H05-LBL-13）",
+        "逐行 failure_code 与逐字触发值",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-02",
+      "original_proposal_cells": [
+        "total_ratings 以十进制整数安全加法重算：仅当 negative_ratings 小于等于 9223372036854775807 减去 positive_ratings 时相加；重算值一致且无溢出",
+        "不等、溢出或使用 float 中转",
+        "BLOCK",
+        "不等行计数、溢出检查方式与其两侧实值",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-03",
+      "original_proposal_cells": [
+        "基础人口唯一由有效 UTC 日期与非排除发行年决定（与 validate:171 一致），不含键有效性、特征完整性或 ratings 合法性任何过滤",
+        "出现任一人口过滤器",
+        "BLOCK",
+        "人口定义文字、过滤器清单（须为空）与实值",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-04",
+      "original_proposal_cells": [
+        "cutoff 人口等于基础人口：分位计算所用行数与基础人口行数相等",
+        "两值不等",
+        "BLOCK",
+        "两个实值与所用列名",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-05",
+      "original_proposal_cells": [
+        "参数逐字等于 config：quantile 0.90（config.py:14）、interpolation linear（15）、inclusive 为真即用大于等于（16）、排除年 2019（18）、MIN_YEAR_GAMES 为 None（17）",
+        "任一偏离",
+        "BLOCK",
+        "参数快照与 config SHA",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-06",
+      "original_proposal_cells": [
+        "人口侧恒等式：各 cohort_n 之和等于 base_population_rows；各年 positive_n 之和等于 population_positive_sum",
+        "任一等式不成立",
+        "BLOCK",
+        "恒等式两侧数值",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-07",
+      "original_proposal_cells": [
+        "开发侧恒等式：train、validation、test 三者行数之和等于 developed_rows；其正类之和等于 developed_positive_sum。人口侧合计与开发侧合计是两个独立量：仅当基础人口中不存在不进入开发域的 cohort 时才相等，禁止把人口正类合计一概等同开发 y 合计",
+        "任一等式不成立，或两者被写成同一变量",
+        "BLOCK",
+        "两组数值、以及不进入开发域的 cohort 年清单",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-08",
+      "original_proposal_cells": [
+        "比较结果不可判定的行不得产生标签 0：现行实现按输入形态得 0、留缺失或抛 TypeError（GPT 既有合成观察，非本会话执行）；本稿建议统一为不产生标签，属未采用建议",
+        "出现无依据 0，或 TypeError 未被捕获",
+        "BLOCK 加 DEC（待采纳，改变实现行为）",
+        "受影响行引用；已接受快照内推为 0，须实测",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-09",
+      "original_proposal_cells": [
+        "排除年（2019）：无更高优先级故障时 disposition 为 excluded_2019；无论主去向，均记录排除年诊断、标签为空、不出现在 X 与 y；年份计数与主 disposition 计数分开",
+        "任一 2019 行出现在 X 或带标签",
+        "BLOCK",
+        "keys 中 2019 计数与 X 内 2019 计数（后者须为 0）",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-10",
+      "original_proposal_cells": [
+        "NaT 行保留逐字原值与原因、标签为空、不在 X 与 y；无更高优先级故障时 disposition 为 invalid_date_nat，无论主去向均保留日期失败诊断",
+        "记录丢失或带标签",
+        "BLOCK",
+        "nat_rows、empty_date_cell 与行样本引用",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-11",
+      "original_proposal_cells": [
+        "未覆盖年份（发行年晚于 TEST_YEAR 且不在排除年）必须显式处置：本稿建议无更高优先级故障时隔离为 uncovered_year；无论主去向均记未覆盖年份诊断、不进 X 与 y、不带标签，并把该年基础人口统计与开发域投影分开记录（未采用建议，见 D-α）；不得因 prepare_analytical 会为它们生成标签（F-5/F-6/F-7、U-2）就默认允许",
+        "存在此类行且带标签或进 X，或人口与投影统计混用",
+        "BLOCK 加 DEC",
+        "rows_in_uncovered_years 实值（快照内推为 0，须实测）与该年 cohort 记录",
+        "build/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-12",
+      "original_proposal_cells": [
+        "年份处置不扰动其他年 cutoff：cutoff 为逐年 groupby（validate:173-175），新增或隔离某年只影响该年 cohort",
+        "其他年 cutoff 变化而无可解释输入变化",
+        "BLOCK",
+        "变更前后逐年可控差值",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-LBL-13",
+      "original_proposal_cells": [
+        "无法合法对账的记录不得被静默消化：坏键（invalid_key）与基础人口内的非法 ratings，本稿建议整包阻断并保留逐行诊断（未采用建议），绝不删行缩小人口后重算 cutoff；无标签行不得作为历史来源（与 validate:229-231 的有限性跳过一致）",
+        "人口缩小后重算、诊断缺失、或无标签行出现在来源集合",
+        "BLOCK 加 DEC",
+        "整包阻断判据、诊断计数、来源集合与 y 的按 appid join 断言",
+        "build/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-01",
+      "original_proposal_cells": [
+        "每条来源边的来源发行年严格早于其目标记录发行年；同年记录不得互看",
+        "命中同年或晚于目标的来源年",
+        "BLOCK",
+        "membership 与 keys_meta 按 target_appid join 后\"来源年不早于目标年\"的计数（须为 0）",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-02",
+      "original_proposal_cells": [
+        "未来年不入历史；排除年（2019）永不作为来源（validate:227-228 的跳过须有实证）",
+        "命中未来年或排除年来源",
+        "BLOCK",
+        "来源年集合与逐年来源计数",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-03",
+      "original_proposal_cells": [
+        "表示唯一且主键闭合：本稿选定带目标与窗口身份的边表，主键为 (window_variant, target_appid, entity_kind, source_year, source_appid)；若改用全局去重实体到来源游戏索引的备选，则不得按目标重复行且须重定义主键与重建口径。一个产物内不得混用两种表示",
+        "主键重复、表示混用、或选定项与 manifest 不符",
+        "BLOCK",
+        "manifest.history.membership_representation 与实测主键重复计数",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-04",
+      "original_proposal_cells": [
+        "完整预期来源集合重建：对给定目标记录、entity_kind 与窗口，独立重建全部满足\"来源年早于目标发行年 且 来源年不在排除年 且 来源标签有效 且 属已选窗口 且 其该字段解析后含目标任一实体；窗口 A 为严格较早年，只有 B 被采用时额外要求 source_year 不晚于 TRAIN_MAX_YEAR\"的来源 appid 集合，并与实际逐项双向比较；必须分别报告缺源、多源与重复，禁止只审已有行的合法性",
+        "双向差集非空、含重复、或仅做单向合法性检查",
+        "BLOCK",
+        "逐 entity_kind 的双向差集计数与三类计数",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-05",
+      "original_proposal_cells": [
+        "来源行标签绑定已 hash 文件：来源标签取自 manifest 中 y_label 的 hash 条目，实体文本取自 x_primary 的 hash 条目；禁止把 source_appid 当作 target_appid 直接 join",
+        "绑定缺失、或 join 依据错误",
+        "BLOCK",
+        "被绑定文件的 sha256 与 join 键说明",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-06",
+      "original_proposal_cells": [
+        "数值核算由重建集合独立给出：count_feature 等于 log1p(N)；rate 等于 (H + alpha × prior_mean) 除以 (N + alpha)，alpha 为 10.0、prior_mean 为 0.10（config.py:25-26, 108）；空集合回退为 (0, 0.10)；实体权重 (0.5, 0.5)（config.py:30）逐字。N 与 H 取自重建集合，不得取自被测实现的中间输出",
+        "公式偏离、回退错误、或 N 与 H 来自被测输出",
+        "BLOCK",
+        "重建的 N、H、公式两侧实值与回退行计数",
+        "build/audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-07",
+      "original_proposal_cells": [
+        "每个目标在 history_windows 的 target_windows 记录中以 (window_variant,target_appid) 标注 source_max_year，并保留 cohort 汇总；空来源集合写 null；历史数据文件在 manifest 逐项绑定 window_variant；单包不混窗，多变体仅在另行采用后使用不同包路径和 hash",
+        "缺标或混窗",
+        "BLOCK",
+        "history_windows.target_windows、cohort_windows 与 manifest 的窗口绑定",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Bind window A and per-target/field/cohort source max years; target_windows key is (window_variant,target_appid,entity_kind).",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-HIST-08",
+      "original_proposal_cells": [
+        "窗口变体产物 hash 分离且各自可重放：当前只要求冻结变体 A（严格较早年，config.py:27，不需重新授权）；变体 B（封顶 2016）为未采用备选，不构成本包未决门禁。只有另行采用 B 后，A 与 B 才须不同包路径、独立 hash；影响表述须限定为\"2017 行不改变（其来源本已不晚于 2016），2018 行仅当存在相关的 2017 来源时才可能改变\"",
+        "已采用多变体却混包、无法重放、或影响表述被夸大",
+        "DEC 加 BLOCK（重放失败或表述夸大）",
+        "变体清单、用户决定引用、两侧产物 hash 与差异行计数",
+        "audit/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Frozen A needs no new approval; B disabled and not an open gate; if B later adopted, separate version/packages/hashes.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-AUX-01",
+      "original_proposal_cells": [
+        "左关联后主样本行数不变（不因 requirements/support 缺行改变主样本）",
+        "行数变化",
+        "BLOCK",
+        "前后行数",
+        "build"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-AUX-02",
+      "original_proposal_cells": [
+        "每辅助表 appid 唯一；重复键/额外键/缺失覆盖分别记录，不合并计数",
+        "重复键或多对多",
+        "BLOCK",
+        "三类计数（对照 F-13 预期）",
+        "build/read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-AUX-03",
+      "original_proposal_cells": [
+        "tags 表不供任何主 X 来源；descriptions/media/requirements/support 仅敏感性",
+        "来源映射越界",
+        "BLOCK",
+        "source_map",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-AUX-04",
+      "original_proposal_cells": [
+        "回顾性限制原文随包保留（单次 2019 快照）",
+        "缺失或措辞变强",
+        "BLOCK",
+        "report 首段引用",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-01",
+      "original_proposal_cells": [
+        "manifest 逐项实列并与其它章节闭合：解析合同版本与 hash、交接合同版本与 hash、design_contract 快照（config.py:85-124）及其 hash、config hash、任务相关代码 hash（H05-MAN-06）、适用数据文件的 field_dictionary 与 source_map 与 codebook 绑定及主键键域声明、每个稳定层文件 sha256、关系表行数与列序、对象 schema_shape；manifest.files 只列稳定层，report/READY 路径只在不含hash的 control_files 声明、UTC 执行时间、依赖实际版本、各 disposition 计数、cutoff 算法标识与人口与切点、人口侧与开发侧两组合计、历史窗口与并集重建引用、每列是否学习型、检查结论与 scope 与证据位置。unknown 一律 null 并附说明",
+        "任一项缺失、以空串或占位串伪装已知、或引用的绑定对象在包内不存在",
+        "BLOCK",
+        "逐项核对表（每项引用 manifest 路径）与引用闭合结果",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-02",
+      "original_proposal_cells": [
+        "拒绝旧输入 hash 冒用计数：label.snapshot_reference 仅在 inputs 中全部 sha256 与已接受清单逐字节相等时才可作期望值，且始终标 documentary_only；hash 不等时只做内部一致性断言（H05-LBL-06/07）",
+        "hash 不等却以 27075、1046、637、817 判通过",
+        "BLOCK",
+        "hash 匹配的逐文件布尔结果与判据引用",
+        "read/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-03",
+      "original_proposal_cells": [
+        "hash 无环：方向固定为 稳定层 转 manifest 转 validation_report 转 HANDOFF_READY；稳定层不含后三者；manifest 只含稳定层 hash，不含自身、report、READY；report 含 manifest hash，不含自身与 READY；READY 含 manifest 与 report 两个 hash；任何反向边禁止",
+        "出现环或任一反向边（例如 manifest 内含 report hash）",
+        "BLOCK",
+        "manifest.hash_layers 各字段实值与引用图遍历结果",
+        "audit/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-04",
+      "original_proposal_cells": [
+        "全文扫描不得含凭据、密钥、本机配置或个人绝对路径",
+        "命中",
+        "BLOCK",
+        "扫描规则版本与命中计数（须为 0）",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-05",
+      "original_proposal_cells": [
+        "contract_version 与 design_version 分离：design_version 保持 v1.1、design 快照与 config SHA 一致、无参数被交接合同顺带改动；交接合同版本不得被用来绕过设计升版",
+        "两版本混用、快照与 SHA 不一致、或出现顺带改动",
+        "BLOCK",
+        "两版本字段、快照与 config SHA",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Bind current config.DESIGN_VERSION v1.2, unchanged v1.1 business subset, parse steam-parse/v1 and handoff steam-handoff/v1; do not reinterpret historical artifacts.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-06",
+      "original_proposal_cells": [
+        "代码追溯等于 HEAD 加本任务相关文件的实际 SHA（工作树不干净，HEAD 不足以代表输入）；只绑定任务相关源码与配置，不得把无关用户脏文件的内容带入包或记为追溯依据",
+        "只记 HEAD、绑定集合越界、或含无关脏文件内容",
+        "BLOCK",
+        "manifest.git.relevant_code_sha256 与实测 hash",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-07",
+      "original_proposal_cells": [
+        "实际依赖版本（python、pandas、numpy；仅当选用 Parquet 时须引擎）来自真实运行采集；null 或文档推测值不得判为通过",
+        "以 null 或推测值判通过",
+        "BLOCK",
+        "runtime 字段的来源标注与采集方式",
+        "read"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-MAN-08",
+      "original_proposal_cells": [
+        "parse_policy_ref 已解除方可交接：仍为 UNRESOLVED_REFERENCE 时不得产生 READY，也不得宣称可交接",
+        "值为 UNRESOLVED_REFERENCE 却存在 READY",
+        "BLOCK",
+        "manifest.versions.parse_policy_ref 与 READY 存在性",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "parse_policy_ref is adopted steam-parse/v1 plus actual policy doc/config hash; policy adoption does not imply implementation or real-file PASS.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-01",
+      "original_proposal_cells": [
+        "任一适用 BLOCK 失败即不生成 HANDOFF_READY.json、report.overall 不得为通过、包级状态不得称可交接；逐项 PASS/FAIL 与诊断仍须如实完整记录",
+        "存在 marker 却有未解除的适用 BLOCK 失败，或失败包的 overall 为通过",
+        "BLOCK",
+        "report.overall、失败项清单与 marker 存在性的一致性",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-02",
+      "original_proposal_cells": [
+        "每次运行使用 outputs/data_handoff/UTC微秒时间戳目录/ 的新独立目录（project_paths.py:38-45）；不覆盖历史运行；原始六表与 STEP1 OUTPUT 原交付字节不变",
+        "目录复用或被覆盖，或原表与 STEP1 的 hash 变化",
+        "BLOCK",
+        "目录名、原六表 hash 与 STEP1 交付 hash 前后对照",
+        "build/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "normative_override": "Current evidence covers read-only six-file bytes; production must independently verify raw and STEP1 protection for its own run.",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-03",
+      "original_proposal_cells": [
+        "封存顺序闭合（B1）：全部数据与表示检查在 candidate/ 完成 转 按最终逻辑路径封存稳定层并逐文件核验与候选字节一致 转 冻结 manifest（只 hash 稳定层）转 生成绑定 manifest 的 report 转 全部必要前置通过后最后写 READY。READY 存在性不得作为生成 READY 的前置",
+        "顺序颠倒、封存字节与候选不一致、或出现循环前置",
+        "BLOCK",
+        "封存时序记录、逐文件字节一致性结果与引用图",
+        "build/read/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-04",
+      "original_proposal_cells": [
+        "失败时即使 handoff/ 残留文件也不可称已验收；candidate/ 不得被任何指针或报告引用为交付",
+        "残留文件被称已验收或候选被引用",
+        "BLOCK",
+        "路径归属表与指针目标校验",
+        "build/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-05",
+      "original_proposal_cells": [
+        "消费者核验清单逐项通过（B1 已验收定义七项）：必需文件齐全、逐文件实测 hash 与 manifest.files 一致、manifest hash 与 report 与 READY 绑定一致、report hash 与 READY 绑定一致、report.scope 为真实文件验收且 overall 通过、无 BLOCK 与未解除必要待决项、READY 的 manifest 与 report 双 hash 一致",
+        "任一项不成立",
+        "BLOCK",
+        "七项逐项实测结果；消费者另写包外核验记录，不回写已封存 report",
+        "read/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-06",
+      "original_proposal_cells": [
+        "分层重验而非单一清单：稳定层按 manifest.files 重算；manifest 按 report 与 READY 绑定值重算；report 按 READY 绑定值重算；不得写成\"全部文件 hash 都在 manifest\"",
+        "任一层重算不等，或重验口径混用",
+        "BLOCK",
+        "三层重验结果与各自清单引用；READY后验核验另存包外记录",
+        "audit"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-07",
+      "original_proposal_cells": [
+        "范围分离：合成实现验收、局部运行与静态接受不得写成正式交接通过；validation_report 以 scope 字段明确 synthetic 与 real-file 两类结论",
+        "scope 缺失或范围混同",
+        "BLOCK",
+        "report.scope 字段与逐项结论",
+        "gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    },
+    {
+      "id": "H05-GATE-08",
+      "original_proposal_cells": [
+        "权限与既有语义不变：已验收包不自动获得上传或发布权限；H04 退出码 4 的语义（无数据阻断但有 open items）不因本批次改写",
+        "出现发布动作，或 exit 语义与 pending 口径被篡改",
+        "BLOCK",
+        "动作日志（须为空）与 H04-R4 记录引用",
+        "audit/gate"
+      ],
+      "source": "docs/DATA_HANDOFF_CONTRACT.md",
+      "source_sha256": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+      "execution_status": "versioned_result_separate",
+      "normative_authority": "config.py plus final parse/handoff contracts; adopted recommendation only, alternatives disabled",
+      "proposal_execution_status": "not_run",
+      "execution_evidence_source": "scripts/run_data_contract_tests.py -> outputs/data_contract_implementation/<UTC>/acceptance.json; synthetic and real-file are separate",
+      "historical_provenance": {
+        "path": "docs/collaboration/STEAM-B05/B05-T02-handoff-proposal-GPT-candidate-R3.md",
+        "sha256": "356e9ab91898a34551b6d1cdb3523a6fefe1aebb363d1efb5d7e51933e012e69",
+        "retained": false,
+        "reason": "Superseded process drafts removed during authorized 2026-10-12 handoff cleanup; original proposal cells remain in this index."
+      }
+    }
+  ],
+  "P05_executed": false,
+  "H05_executed": false,
+  "index_revision": {
+    "date": "2026-10-12",
+    "scope": "documentation_source_and_current_stage_only",
+    "unchanged": "all 53 P05 and 68 H05 IDs and original proposal cells"
+  }
+}

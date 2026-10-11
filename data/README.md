@@ -27,11 +27,11 @@ The ZIP integrity test passed, and each extracted CSV's size and CRC matched its
 | `steam_support_info.csv` | 27,136 × 4 | Optional support metadata | 99.28% |
 | `steamspy_tag_data.csv` | 29,022 × 372 | Post-release tag votes; forbidden in primary model | 100% |
 
-All six tables have complete, unique app IDs and no exact duplicate rows. The main table has only fifteen missing cells: one `developer` and fourteen `publisher` values.
+The historical pandas-default-NA audit found complete unique app IDs, no exact duplicate rows, and fifteen missing cells (one developer, fourteen publisher). The 2026-10-11 literal-string B05 diagnostic independently confirms all six key domains and finds three declared-missing developer cells plus seventeen declared-missing and six whitespace-only publisher cells. These counts use different missing definitions; the historical fifteen is not an adopted-parser missing count. See [formal acceptance](../docs/DATA_HANDOFF_ACCEPTANCE.md) and [EDA summary](../docs/EDA_SUMMARY.md).
 
 ## Modeling contract
 
-Current design: **v1.1 (2026-09-24 meeting)**, adopted on 2026-10-09. The authoritative decisions are in [docs/DECISIONS.md](../docs/DECISIONS.md); executable policy is in [config.py](../config.py).
+Current policy: **v1.2 (B05 parsing/handoff adopted 2026-10-11)**; the business design remains **v1.1 (2026-09-24 meeting)**, adopted on 2026-10-09. Production implementation, real-file acceptance, physical READY and independent consumer verification are complete; modeling has not started. See [parse contract](../docs/DATA_PARSE_CONTRACT.md) and [handoff contract](../docs/DATA_HANDOFF_CONTRACT.md). The authoritative decisions are in [docs/DECISIONS.md](../docs/DECISIONS.md); executable policy is in [config.py](../config.py).
 
 Use releases through 2018 only. The 2019 cohort is incomplete.
 
@@ -69,6 +69,6 @@ file_integrity: PASS
 analytical_acceptance: CONDITIONAL_GO
 ```
 
-Each run writes a separate UTC directory under `outputs/data_audit/`. STEP1 OUTPUT is a local delivery under review and is not a current modeling input.
+Each run writes a separate UTC directory under `outputs/data_audit/`. The superseded STEP1 delivery and process files were removed in the authorized 2026-10-12 cleanup. Accepted model inputs are delivered privately in data/processed/steam_handoff_v12/.
 
 Raw files are intentionally ignored by `.gitignore`. Do not upload the raw data to a repository or external platform as part of this project workflow.

@@ -1,0 +1,161 @@
+{
+  "states": [
+    "S_MISSING",
+    "S_EMPTY_LIST",
+    "S_EMPTY_STRING_ELEMENT",
+    "S_LIST"
+  ],
+  "state_reachability": {
+    "S_MISSING": "source MISSING_*; wire JSON null",
+    "S_EMPTY_LIST": "nonmissing raw text parses to no entities; wire []",
+    "S_EMPTY_STRING_ELEMENT": "reserved representation example; source parser must not output",
+    "S_LIST": "nonempty ordered string list"
+  },
+  "source_classes": [
+    "PRESENT",
+    "MISSING_EMPTY",
+    "MISSING_WHITESPACE",
+    "MISSING_DECLARED",
+    "INVALID"
+  ],
+  "dispositions": [
+    "invalid_key",
+    "invalid_date_nat",
+    "excluded_2019",
+    "uncovered_year",
+    "invalid_label_input",
+    "train",
+    "validation",
+    "test"
+  ],
+  "failure_codes": {
+    "APPID_MISSING": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "BOOL_LITERAL": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "CALENDAR_RANGE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "COUNT_CAST": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "COUNT_OVERFLOW": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_AGE_NEGATIVE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_AGE_NON_FINITE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_AGE_NON_INTEGER": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_AGE_OVERFLOW": {
+      "severity": "BLOCK",
+      "meaning": "reserved unadopted MODE_FLOAT code; not emitted by MODE_INT",
+      "active_for_adopted_mode": false
+    },
+    "ERR_AGE_UNDERFLOW": {
+      "severity": "BLOCK",
+      "meaning": "reserved unadopted MODE_FLOAT code; not emitted by MODE_INT",
+      "active_for_adopted_mode": false
+    },
+    "ERR_AGE_UNPARSEABLE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_APPID_ILLEGAL": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_APPID_NORMALISATION_COLLISION": {
+      "severity": "BLOCK",
+      "meaning": "duplicate or strip-collision within one source table; zero removal is not adopted",
+      "alias": "ERR_APPID_DUPLICATE_OR_STRIP_COLLISION"
+    },
+    "ERR_APPID_OUT_OF_INT64": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_ENGLISH_ILLEGAL": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "JSON_PARSE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "RATINGS_ILLEGAL_LITERAL": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained",
+      "outside_base_population_severity": "DIAG"
+    },
+    "RATINGS_OUT_OF_RANGE": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained",
+      "outside_base_population_severity": "DIAG"
+    },
+    "RATINGS_SUM_OVERFLOW": {
+      "severity": "BLOCK",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained",
+      "outside_base_population_severity": "DIAG"
+    },
+    "WARN_LEADING_ZERO": {
+      "severity": "WARN",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "WARN_MIXED_DELIMITER": {
+      "severity": "WARN",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "WARN_SUSPECT_DELIMITER_PRESENT": {
+      "severity": "WARN",
+      "meaning": "bound to normative parse/column rule; original raw trigger retained"
+    },
+    "ERR_AGE_OUT_OF_INT64": {
+      "severity": "BLOCK",
+      "meaning": "logical integer exceeds storage capacity; not semantic age cap"
+    },
+    "DATE_NAT": {
+      "severity": "DIAG",
+      "meaning": "UTC/coerce/mixed invalid date; retain identity and raw string"
+    },
+    "UNCOVERED_YEAR": {
+      "severity": "DIAG",
+      "meaning": "year>TEST_YEAR and nonexcluded; isolate individual row, preserve base population"
+    }
+  },
+  "schema_shape": "object",
+  "record_sets": {
+    "failure_codes": {
+      "shape": "keyed_object",
+      "key": "object_property_name",
+      "value_fields": [
+        "severity",
+        "meaning"
+      ]
+    }
+  },
+  "policy_ref": "steam-parse/v1",
+  "split_by_disposition": {
+    "invalid_key": "unknown",
+    "invalid_date_nat": "unknown",
+    "excluded_2019": "excluded",
+    "uncovered_year": "unknown",
+    "invalid_label_input": "unknown",
+    "train": "train",
+    "validation": "validation",
+    "test": "test"
+  }
+}
