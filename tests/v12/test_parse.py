@@ -325,6 +325,48 @@ class ParseBoundaryTests(unittest.TestCase):
             self.assertEqual([list(row.values()) for row in parsed], rows)
             self.assertTrue(all(type(value) is str for row in parsed for value in row.values()))
 
+    def test_literal_csv_preserves_fields_above_default_limit_and_restores_limit(self):
+        original_limit = csv.field_size_limit()
+        custom_limit = 1024
+        zero_prefix = "0" * 140000
+        record = {
+            "appid": zero_prefix + "12",
+            "required_age": zero_prefix + "12",
+            "name": 'quoted,"name"\n' * 12000,
+        }
+        try:
+            csv.field_size_limit(custom_limit)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "long.csv"
+                with path.open("w", encoding="utf-8", newline="") as stream:
+                    writer = csv.DictWriter(stream, fieldnames=list(record),
+                                            lineterminator="\n", quoting=csv.QUOTE_ALL)
+                    writer.writeheader()
+                    writer.writerow(record)
+                self.assertEqual(literal_csv(path), [record])
+                self.assertEqual(csv.field_size_limit(), custom_limit)
+                self.assertEqual(parse_appid(record["appid"]).value, record["appid"])
+                self.assertEqual(parse_age(record["required_age"]).value, 12)
+        finally:
+            csv.field_size_limit(original_limit)
+
+    def test_literal_csv_restores_limit_after_long_malformed_record(self):
+        original_limit = csv.field_size_limit()
+        custom_limit = 1024
+        try:
+            csv.field_size_limit(custom_limit)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "long_bad_shape.csv"
+                with path.open("w", encoding="utf-8", newline="") as stream:
+                    writer = csv.writer(stream, lineterminator="\n", quoting=csv.QUOTE_ALL)
+                    writer.writerow(["appid", "name"])
+                    writer.writerow(["0" * 140000 + "12", "name", "extra"])
+                with self.assertRaisesRegex(ValueError, "3 fields; expected 2"):
+                    literal_csv(path)
+                self.assertEqual(csv.field_size_limit(), custom_limit)
+        finally:
+            csv.field_size_limit(original_limit)
+
     def test_literal_csv_rejects_bad_header_or_record_shape(self):
         invalid_files = {
             "empty": "",

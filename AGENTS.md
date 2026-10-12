@@ -9,7 +9,7 @@
 - SteamSpy tags/tag_count、ratings、owners、playtime和标签派生字段禁止进X；快照price/achievements/辅助表仅作敏感性。ID/态/split/标签/审计元数据剔除后才是24列主X。
 - 正式包固定在`data/processed/steam_handoff_v12/`，21文件原字节只读，物理READY与消费者验收已通过；不覆盖、不回写报告。封存合同及config阶段字段是历史快照，当前完成状态看验收摘要。
 - 原始六表在课程共享目录只读；STEP1旧交付、candidate重复副本和协作过程已按用户2026-10-12授权删除。删除清单与最终验收证据在本地`data/processed/acceptance/`。
-- `python -B -m scripts.load_modeling_data`是接收方只读验证入口。`python -B -m scripts.run_data_contract_tests`保留旧H04守卫与当前固定基线；R4仅显式更新3个文档绑定，R3绑定存于prior_binding，禁止自动刷新。
+- `python -B -m scripts.load_modeling_data`是接收方只读验证入口。`python -B -m scripts.run_data_contract_tests`保留旧H04守卫与当前固定基线；当前R7显式绑定非法源行号的阻断诊断修复，完整R6/R5/R4/R3链存于prior_binding，禁止自动刷新。loader另跑独立测试，不在15项合成固定基线内。
 - EDA复现使用`scripts/reproduce_data_eda.py`，新结果写`outputs/data_eda/<UTC>/`；展示版在`reports/eda/`。复现另需原始六表，默认ZIP不含原始输入。
 - 复用代码在src，命令在scripts，标准/交接在docs，展示报告在reports；新运行仅新UTC目录。变更后验证配置、schema读回、实际输入、相关测试与文档链接。
 - 学习型预处理仅训练历史fit，参数/阈值在validation选择；2018已经做描述性EDA，后续须披露。快照不能证明发售前可得、因果或ROI。

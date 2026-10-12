@@ -63,7 +63,7 @@ def main():
     raw_directory = args.raw_directory.expanduser().resolve() if args.raw_directory else find_steam_csv().parent
     if not raw_directory.is_dir():
         raise FileNotFoundError(f"Raw input directory does not exist: {raw_directory}")
-    manifest = strict_json_loads((PACKAGE / "manifest/manifest.json").read_text())
+    manifest = strict_json_loads((PACKAGE / "manifest/manifest.json").read_text(encoding="utf-8"))
     before = protected_snapshot(raw_directory, manifest["inputs"])
     started = datetime.now(timezone.utc).isoformat()
     output = ROOT / "outputs/data_eda" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
@@ -81,7 +81,7 @@ def main():
 
     consumer = verify_package(PACKAGE, require_real=True)
     check("physical_READY_chain", consumer["accepted_for_formal_handoff"], consumer)
-    sealed = strict_json_loads((PACKAGE / "manifest/design_contract_snapshot.json").read_text())
+    sealed = strict_json_loads((PACKAGE / "manifest/design_contract_snapshot.json").read_text(encoding="utf-8"))
     check("config_sha_and_design", sealed["config_sha256"] == file_hash(ROOT / "config.py")
           and sealed["design"] == json.loads(json.dumps(config.design_contract())), sealed["config_sha256"])
     check("accepted_six_input_hashes", len(manifest["inputs"]) == 6
@@ -93,7 +93,7 @@ def main():
     check("relocated_formal_package_inventory", set(before["formal_package"]) == expected_package_files
           and len(expected_package_files) == 21,
           {"files": len(before["formal_package"]), "candidate_tree_required": False})
-    schema = strict_json_loads((PACKAGE / "manifest/handoff_schema.json").read_text())
+    schema = strict_json_loads((PACKAGE / "manifest/handoff_schema.json").read_text(encoding="utf-8"))
     with (PACKAGE / "manifest/field_dictionary.csv").open(encoding="utf-8", newline="") as f:
         definitions = {(r["file"], r["column"]): r for r in csv.DictReader(f)}
 

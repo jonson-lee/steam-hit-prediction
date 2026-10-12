@@ -4,6 +4,7 @@ Expected populations/labels/history below are hand specified. Negative cases
 alter inputs or packaged bytes; PASS records are written after the assertion,
 never copied from the contract's definition list or producer's PASS labels.
 """
+from collections import Counter
 from copy import deepcopy
 import csv
 import json
@@ -308,6 +309,48 @@ class FailureRegressions(unittest.TestCase):
         for w in data.history_windows['target_windows']:w['target_appid']='2'
         self.assertEqual(h.validate_dataset(data)['H05-KEY-03']['status'],'FAIL')
 
+    def test_metadata_disposition_must_match_each_source_identity(self):
+        cases=[('train_to_test',[row('1',2016)],[(0,'test','test')]),
+               ('train_to_validation',[row('1',2016)],[(0,'validation','validation')]),
+               ('swapped_sources',[row('1',2016),row('2',2018)],[(0,'test','test'),(1,'train','train')]),
+               ('excluded_to_uncovered',[row('1',2019)],[(0,'uncovered_year','unknown')]),
+               ('uncovered_to_excluded',[row('1',2020)],[(0,'excluded_2019','excluded')])]
+        for name,main,changes in cases:
+            with self.subTest(case=name),tempfile.TemporaryDirectory() as t:
+                data=h.build_dataset(main)
+                meta=data.tables['handoff/keys_meta.csv']
+                original_counts=Counter(r['disposition'] for r in meta)
+                for index,disposition,split in changes:
+                    meta[index].update(disposition=disposition,split=split)
+                if name=='swapped_sources':
+                    self.assertEqual(Counter(r['disposition'] for r in meta),original_counts)
+                receipt=h.write_package(data,t,issue_ready=True)
+                self.assertEqual(receipt['report']['checks']['H05-KEY-05']['status'],'FAIL')
+                self.assertEqual(receipt['report']['overall'],'blocked')
+                self.assertFalse((receipt['directory']/'manifest/HANDOFF_READY.json').exists())
+
+    def test_metadata_disposition_binding_uses_identity_not_row_position(self):
+        data=h.build_dataset([row('1',2016),row('2',2018)])
+        data.tables['handoff/keys_meta.csv'].reverse()
+        checks=h.validate_dataset(data)
+        self.assertEqual(checks['H05-KEY-05']['status'],'PASS')
+        self.assertEqual(checks['H05-KEY-08']['status'],'FAIL')
+
+    def test_invalid_metadata_source_row_returns_blocked_diagnostics(self):
+        for source_row_no in (0,-1,2,None,'1',True):
+            with self.subTest(source_row_no=source_row_no),tempfile.TemporaryDirectory() as t:
+                data=h.build_dataset([row('1',2016)])
+                data.tables['handoff/keys_meta.csv'][0]['source_row_no']=source_row_no
+                receipt=h.write_package(data,t,issue_ready=True)
+                self.assertEqual(receipt['report']['overall'],'blocked')
+                self.assertIn('SOURCE_IDENTITY',receipt['report']['error'])
+                self.assertEqual(len(receipt['report']['checks']),68)
+                report_path=receipt['directory']/'diagnostics/validation_report.json'
+                self.assertTrue(report_path.is_file())
+                self.assertEqual(h.strict_json_loads(report_path.read_text(encoding='utf-8')),receipt['report'])
+                self.assertFalse((receipt['directory']/'manifest').exists())
+                self.assertFalse((receipt['directory']/'candidate').exists())
+
     def test_virtual_marker_never_authorizes_formal_scope_and_wrong_ids_rejected(self):
         data=h.build_dataset([row('1',2016)])
         with tempfile.TemporaryDirectory() as t:
@@ -392,3 +435,48 @@ class FailureRegressions(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             p=Path(t)/'bad.csv';p.write_text('"wrong"\n"1"\n')
             with self.assertRaises(ValueError):h.read_table(p,schema['files']['handoff/x_primary.csv']['columns'],defs,'handoff/x_primary.csv')
+
+    def test_long_fields_survive_package_readback_and_restore_csv_limit(self):
+        original_limit=csv.field_size_limit();custom_limit=1024
+        zero_prefix='0'*140000;key=zero_prefix+'12'
+        name='quoted,"name"\n'*12000
+        main=[row(key,2016,name=name,required_age=zero_prefix+'12')]
+        try:
+            csv.field_size_limit(custom_limit)
+            with tempfile.TemporaryDirectory() as t:
+                receipt=h.write_package(h.build_dataset(main),t)
+                self.assertEqual(receipt['report']['overall'],'pass')
+                self.assertEqual(csv.field_size_limit(),custom_limit)
+                schema,defs=h._load_spec()
+                p='handoff/x_primary.csv'
+                x=h.read_table(receipt['directory']/p,schema['files'][p]['columns'],defs,p)
+                self.assertEqual(x[0]['appid'],key)
+                self.assertEqual(x[0]['required_age'],12)
+                self.assertEqual(csv.field_size_limit(),custom_limit)
+                p='handoff/keys_meta.csv'
+                meta=h.read_table(receipt['directory']/p,schema['files'][p]['columns'],defs,p)
+                self.assertEqual(meta[0]['appid'],key)
+                self.assertEqual(meta[0]['raw_appid'],key)
+                self.assertEqual(meta[0]['name'],name)
+                self.assertEqual(meta[0]['raw_parse_values']['required_age'],zero_prefix+'12')
+                self.assertEqual(csv.field_size_limit(),custom_limit)
+        finally:
+            csv.field_size_limit(original_limit)
+
+    def test_readback_restores_csv_limit_after_long_malformed_record(self):
+        schema,defs=h._load_spec();p='handoff/x_primary.csv'
+        columns=schema['files'][p]['columns']
+        original_limit=csv.field_size_limit();custom_limit=1024
+        try:
+            csv.field_size_limit(custom_limit)
+            with tempfile.TemporaryDirectory() as t:
+                path=Path(t)/'long_bad_shape.csv'
+                with path.open('w',encoding='utf-8',newline='') as stream:
+                    writer=csv.writer(stream,quoting=csv.QUOTE_ALL,lineterminator='\n')
+                    writer.writerow(columns)
+                    writer.writerow(['0'*140000+'12']+['']*len(columns))
+                with self.assertRaisesRegex(ValueError,'SCHEMA_COLUMNS'):
+                    h.read_table(path,columns,defs,p)
+                self.assertEqual(csv.field_size_limit(),custom_limit)
+        finally:
+            csv.field_size_limit(original_limit)

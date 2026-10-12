@@ -60,7 +60,7 @@ python -B -m scripts.reproduce_data_eda --raw-directory /path/to/steam
 python -B -m scripts.build_modeling_handoff
 ```
 
-EDA复现另需六张原始CSV，原始数据不随默认交接ZIP提供。新运行写`outputs/<阶段>/<UTC>/`，不覆盖交接或展示材料。R4固定验收基线仅更新文档阶段和来源指针，保留R3旧绑定；配置、解析/交接实现和旧H04守卫不变。封存包中的合同与config阶段字段是制作时快照，当前完成状态以READY与验收摘要为准。
+EDA复现另需六张原始CSV，原始数据不随默认交接ZIP提供。新运行写`outputs/<阶段>/<UTC>/`，不覆盖交接或展示材料。当前R7补齐非法源行号的阻断诊断，保留R6的UTF-8/逐源身份切分门禁、R5的长前导零键/CSV长字段修复及完整R6/R5/R4/R3旧绑定；合成157项、旧H04 11项及独立loader 15项测试通过。新版私下交接ZIP还提供中英文元数据对照表。配置、schema、旧H04守卫及封存21文件原字节不变。封存包中的合同与config阶段字段是制作时快照，当前完成状态以READY与验收摘要为准。
 
 ## 标准与来源
 

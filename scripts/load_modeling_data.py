@@ -6,7 +6,6 @@ import argparse
 import csv
 import json
 from pathlib import Path
-import re
 import sys
 
 import pandas as pd
@@ -17,6 +16,7 @@ if str(ROOT) not in sys.path:
 
 import config
 from src import steam_handoff as handoff
+from src.steam_parse import parse_appid
 
 DEFAULT_PACKAGE = ROOT / "data/processed/steam_handoff_v12"
 SPLITS = ("train", "validation", "test")
@@ -29,8 +29,7 @@ def _json_value(value):
 
 def _keyed(frame, name):
     keys = frame["appid"]
-    if any(not isinstance(key, str) or re.fullmatch(r"[0-9]+", key) is None
-           or int(key) > config.DATA_PARSE_POLICY["appid"]["maximum"] for key in keys):
+    if any(not isinstance(key, str) or parse_appid(key).value != key for key in keys):
         raise ValueError(f"Invalid string appid in {name}")
     if keys.duplicated().any():
         raise ValueError(f"Duplicate appid in {name}")

@@ -22,6 +22,7 @@ ROOT_FILES = (
     ".gitignore", "AGENTS.md", "README.md", "CHANGELOG.md", "JOURNAL.md",
     "Project_Proposal_Steam_Game_Success.md", "config.py", "requirements.txt",
     "data/README.md", "data/raw/README.md", "data/processed/README.md",
+    "data/processed/Steam_数据交接中英文对照表.xlsx",
 )
 EVIDENCE_FILES = (
     "consumer_acceptance_20261011.json", "official_consumer_20261011.json",
@@ -29,6 +30,9 @@ EVIDENCE_FILES = (
     "contract_acceptance_R4_20261012.json", "eda_validation_20261011.json",
     "eda_independent_review_20261011.json", "eda_validation_relocated_20261012.json",
     "modeling_loader_20261012.json",
+    "contract_acceptance_R5_20261012.json", "reader_boundary_fix_20261012.json",
+    "contract_acceptance_R6_20261012.json", "handoff_fix_20261012.json",
+    "contract_acceptance_R7_20261012.json", "source_identity_fix_20261012.json",
 )
 
 
@@ -45,7 +49,7 @@ def delivery_files():
                      and "__pycache__" not in path.parts)
     files.difference_update({ROOT / "docs/NEXT.md", ROOT / "docs/JOURNAL.md"})
     package = ROOT / "data/processed/steam_handoff_v12"
-    manifest = strict_json_loads((package / "manifest/manifest.json").read_text())
+    manifest = strict_json_loads((package / "manifest/manifest.json").read_text(encoding="utf-8"))
     formal = set(manifest["files"]) | {"manifest/manifest.json", *manifest["control_files"].values()}
     if len(formal) != 21 or any(Path(name).is_absolute() or ".." in Path(name).parts for name in formal):
         raise ValueError("Expected the complete sealed 21-file handoff")

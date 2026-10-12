@@ -19,14 +19,14 @@
   },
   "implementation_sha256": {
     "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
-    "src/steam_parse.py": "91fb30ef21fe5172982b30d98767ec940a86fad97b6066d5d58fa52608982d31",
-    "src/steam_handoff.py": "d1c509d6a70196781387bf0f524e17e185e8083fe46da6111337fda68f3d51db",
+    "src/steam_parse.py": "33273c36d3917177cfa87f0efd3eb6c749dc72841f57c784015a956cceee5d27",
+    "src/steam_handoff.py": "d11b361d901fce65ca7d4103d1b9e30db6976478730faee5def14298e8eb6eb9",
     "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
     "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
-    "tests/v12/test_parse.py": "75c58246d554f82be0ef65f3652ad2eba7bca870566bc5f6fc613b5dce774be6",
-    "tests/v12/test_handoff.py": "49e9d9d5139e4dbca380138dad8d0bc16ccbab55c5bd5955e2eef1823d7d528b",
-    "docs/DATA_PARSE_CONTRACT.md": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
-    "docs/DATA_HANDOFF_CONTRACT.md": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+    "tests/v12/test_parse.py": "2c24fc72ae55caea0f5e51fb080f217f666f44243a41251aa6c917ace6e662e7",
+    "tests/v12/test_handoff.py": "59c6435f27c48407868ccd2e79d99ec761593473e84bd38326e05afe805c4dc3",
+    "docs/DATA_PARSE_CONTRACT.md": "364c174925d690829af250c901ad6d4e80a600ea78c6dde6aa8c3c5d1278fc21",
+    "docs/DATA_HANDOFF_CONTRACT.md": "00b9b8ee82402a6cf7939bfb888f8150fbb6dd26ddf45bacd925cb2ad7f41bf1",
     "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
     "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
     "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
@@ -36,36 +36,171 @@
   },
   "binding_status": "explicitly_bound_reviewed_implementation",
   "binding_policy": "All nulls fail closed. Final reviewed hashes must be written explicitly; runner never substitutes or refreshes them.",
-  "binding_utc": "2026-10-11T16:09:39.775535+00:00",
-  "binding_authority": "User authorized 2026-10-12 project cleanup, modeling handoff, and GitHub update; root explicitly binds documentation reconciliation only.",
-  "binding_revision": 4,
-  "binding_revision_reason": "Only two contract documents and assertion-index provenance pointers updated to current acceptance/handoff after obsolete process drafts removed. No policy, source, test assertions, or sealed package bytes changed. R3 hashes and binding preserved in prior_binding; no runner auto-rebaseline.",
+  "binding_utc": "2026-10-12T03:32:53.971708+00:00",
+  "binding_authority": "User authorized current project review and GitHub synchronization on 2026-10-12; root and independent reviewer reviewed the candidate source-row guard and its blocked-diagnostic regression (D-033).",
+  "binding_revision": 7,
+  "binding_revision_reason": "Reject non-integer or out-of-range candidate metadata source_row_no before indexing raw source rows, using the existing blocked diagnostic path. Two explicitly reviewed source/test bindings change; all other thirteen bindings, policy/config/schema, legacy H04 and sealed 21 files are unchanged. Preserve the complete R6/R5/R4/R3 baseline; runner never auto-rebaselines.",
   "prior_binding": {
-    "revision": 3,
-    "binding_utc": "2026-10-11T12:26:53.509045+00:00",
-    "baseline_sha256": "854e7679c5f804dcd118b1a72fc2617a24abb5a582f0fca954dae449e1972e5c",
-    "implementation_sha256": {
-      "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
-      "src/steam_parse.py": "91fb30ef21fe5172982b30d98767ec940a86fad97b6066d5d58fa52608982d31",
-      "src/steam_handoff.py": "d1c509d6a70196781387bf0f524e17e185e8083fe46da6111337fda68f3d51db",
-      "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
-      "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
-      "tests/v12/test_parse.py": "75c58246d554f82be0ef65f3652ad2eba7bca870566bc5f6fc613b5dce774be6",
-      "tests/v12/test_handoff.py": "49e9d9d5139e4dbca380138dad8d0bc16ccbab55c5bd5955e2eef1823d7d528b",
-      "docs/DATA_PARSE_CONTRACT.md": "47587704228c679eae413f39f72e0b27e7150b212c84bc76b6590fc12d130fc9",
-      "docs/DATA_HANDOFF_CONTRACT.md": "8f8202f42c9fb9a078f84cbc50258231fdc8e3feae1847c6eca985703420400c",
-      "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
-      "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
-      "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
-      "docs/data_contract/codebook.json": "8355654d7702e63743c953f4ea043fdc8ab57d9f629444e2e709cb13e38702a9",
-      "docs/data_contract/policy_snapshot.json": "da149ba2ca6ba45a529c7e73e50a3761309cf3dbca63ab5de8a20020e0b6b9ad",
-      "docs/data_contract/assertion_index.json": "5332268e2fd24db14942648d060d003ace77911b90376b78066a5048764aa765"
+    "revision": 6,
+    "baseline_sha256": "826b18b982ba2f5101a95eb7fe81504a52e244ac95e1a48d00e5ec10edf9988e",
+    "schema": "steam-data-contract-test-baseline/v1",
+    "versions": {
+      "design_version": "v1.2",
+      "business_base": "v1.1",
+      "parse_policy": "steam-parse/v1",
+      "handoff_contract": "steam-handoff/v1"
     },
+    "scope": "synthetic",
     "legacy_sha256": {
       "scripts/stage0_precheck.py": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
       "tests/fixtures/stage0_boundary_cases.json": "18d36645b87837f2614c6809dbf30b380ea6b686a944d19f572d7ffc9dfb5968",
       "tests/test_stage0_precheck.py": "786fbd9b309ee1587832921824d215fc84abfd62ef83adbc02f36b313278ea2a",
       "tests/fixtures/legacy_v11/config.py": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e"
+    },
+    "expected_assertion_counts": {
+      "P05": 53,
+      "H05": 68
+    },
+    "implementation_sha256": {
+      "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
+      "src/steam_parse.py": "33273c36d3917177cfa87f0efd3eb6c749dc72841f57c784015a956cceee5d27",
+      "src/steam_handoff.py": "a2b5248283f3795c744b00481b71748621101e8a2264439ccdf80db915b3928f",
+      "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
+      "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
+      "tests/v12/test_parse.py": "2c24fc72ae55caea0f5e51fb080f217f666f44243a41251aa6c917ace6e662e7",
+      "tests/v12/test_handoff.py": "a82861467cc201be9962bfb5c399726a6e2eb75f3a593e3b6640f657dec1d08b",
+      "docs/DATA_PARSE_CONTRACT.md": "364c174925d690829af250c901ad6d4e80a600ea78c6dde6aa8c3c5d1278fc21",
+      "docs/DATA_HANDOFF_CONTRACT.md": "00b9b8ee82402a6cf7939bfb888f8150fbb6dd26ddf45bacd925cb2ad7f41bf1",
+      "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
+      "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
+      "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
+      "docs/data_contract/codebook.json": "8355654d7702e63743c953f4ea043fdc8ab57d9f629444e2e709cb13e38702a9",
+      "docs/data_contract/policy_snapshot.json": "da149ba2ca6ba45a529c7e73e50a3761309cf3dbca63ab5de8a20020e0b6b9ad",
+      "docs/data_contract/assertion_index.json": "4b3e7c8cf953e75278b563e1aead83388a936cbac6d6eaab3fe0c286a05cd73c"
+    },
+    "binding_status": "explicitly_bound_reviewed_implementation",
+    "binding_policy": "All nulls fail closed. Final reviewed hashes must be written explicitly; runner never substitutes or refreshes them.",
+    "binding_utc": "2026-10-12T02:12:15.122941+00:00",
+    "binding_authority": "User requested fixes for both reviewed defects on 2026-10-12; root explicitly reviewed and bound the UTF-8 reader, metadata-disposition gate, regression tests and contract clarification (D-032).",
+    "binding_revision": 6,
+    "binding_revision_reason": "Explicit UTF-8 JSON reads and per-source metadata disposition/split checks implement the already-adopted handoff contract. Three reviewed source/test/contract bindings change; all remaining twelve bindings, legacy guards, config/schema and sealed 21 files remain unchanged. Preserve the complete R5 baseline including nested R4/R3 history. Independent loader tests and packaging/EDA scripts are recorded separately; no runner auto-rebaseline.",
+    "prior_binding": {
+      "revision": 5,
+      "baseline_sha256": "c3de794b607a15eced75378d9086117bef1da1a3bdb57a02b45ad18f72e20d2c",
+      "schema": "steam-data-contract-test-baseline/v1",
+      "versions": {
+        "design_version": "v1.2",
+        "business_base": "v1.1",
+        "parse_policy": "steam-parse/v1",
+        "handoff_contract": "steam-handoff/v1"
+      },
+      "scope": "synthetic",
+      "legacy_sha256": {
+        "scripts/stage0_precheck.py": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
+        "tests/fixtures/stage0_boundary_cases.json": "18d36645b87837f2614c6809dbf30b380ea6b686a944d19f572d7ffc9dfb5968",
+        "tests/test_stage0_precheck.py": "786fbd9b309ee1587832921824d215fc84abfd62ef83adbc02f36b313278ea2a",
+        "tests/fixtures/legacy_v11/config.py": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e"
+      },
+      "expected_assertion_counts": {
+        "P05": 53,
+        "H05": 68
+      },
+      "implementation_sha256": {
+        "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
+        "src/steam_parse.py": "33273c36d3917177cfa87f0efd3eb6c749dc72841f57c784015a956cceee5d27",
+        "src/steam_handoff.py": "0e1c8a52438e00e78985e682dd3ab9dff767c84aa31e43812814817c2d45e01b",
+        "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
+        "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
+        "tests/v12/test_parse.py": "2c24fc72ae55caea0f5e51fb080f217f666f44243a41251aa6c917ace6e662e7",
+        "tests/v12/test_handoff.py": "608ebdfbdbb7bfe8d452237e1afbd07eb84ebf4e450e240124a9ffd154d73219",
+        "docs/DATA_PARSE_CONTRACT.md": "364c174925d690829af250c901ad6d4e80a600ea78c6dde6aa8c3c5d1278fc21",
+        "docs/DATA_HANDOFF_CONTRACT.md": "b86ebb2ed9dd4d89d052a9a814482490e89a2d81b6153ae15b92ab6206c4dbdc",
+        "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
+        "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
+        "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
+        "docs/data_contract/codebook.json": "8355654d7702e63743c953f4ea043fdc8ab57d9f629444e2e709cb13e38702a9",
+        "docs/data_contract/policy_snapshot.json": "da149ba2ca6ba45a529c7e73e50a3761309cf3dbca63ab5de8a20020e0b6b9ad",
+        "docs/data_contract/assertion_index.json": "4b3e7c8cf953e75278b563e1aead83388a936cbac6d6eaab3fe0c286a05cd73c"
+      },
+      "binding_status": "explicitly_bound_reviewed_implementation",
+      "binding_policy": "All nulls fail closed. Final reviewed hashes must be written explicitly; runner never substitutes or refreshes them.",
+      "binding_utc": "2026-10-12T01:59:31.033740+00:00",
+      "binding_authority": "User requested a solution to the reviewed reader defects on 2026-10-12; root explicitly reviewed and bound six implementation/test/contract hashes after regression validation (D-031).",
+      "binding_revision": 5,
+      "binding_revision_reason": "Reuse adopted appid parsing in the independent loader; scope the CSV field limit for raw/handoff readers, with four contract and two independent loader regressions. Six reviewed bindings change, all other bindings and legacy guards remain unchanged. Config/schema and sealed 21 files are unchanged. Preserve the complete R4 baseline and nested R3 history; no runner auto-rebaseline. Loader validation is recorded separately from this 15-file baseline.",
+      "prior_binding": {
+        "revision": 4,
+        "baseline_sha256": "8e241b1cbfede8c0ce1dd7573c93339bd8e4a70878829c4c54d459805189f330",
+        "schema": "steam-data-contract-test-baseline/v1",
+        "versions": {
+          "design_version": "v1.2",
+          "business_base": "v1.1",
+          "parse_policy": "steam-parse/v1",
+          "handoff_contract": "steam-handoff/v1"
+        },
+        "scope": "synthetic",
+        "legacy_sha256": {
+          "scripts/stage0_precheck.py": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
+          "tests/fixtures/stage0_boundary_cases.json": "18d36645b87837f2614c6809dbf30b380ea6b686a944d19f572d7ffc9dfb5968",
+          "tests/test_stage0_precheck.py": "786fbd9b309ee1587832921824d215fc84abfd62ef83adbc02f36b313278ea2a",
+          "tests/fixtures/legacy_v11/config.py": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e"
+        },
+        "expected_assertion_counts": {
+          "P05": 53,
+          "H05": 68
+        },
+        "implementation_sha256": {
+          "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
+          "src/steam_parse.py": "91fb30ef21fe5172982b30d98767ec940a86fad97b6066d5d58fa52608982d31",
+          "src/steam_handoff.py": "d1c509d6a70196781387bf0f524e17e185e8083fe46da6111337fda68f3d51db",
+          "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
+          "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
+          "tests/v12/test_parse.py": "75c58246d554f82be0ef65f3652ad2eba7bca870566bc5f6fc613b5dce774be6",
+          "tests/v12/test_handoff.py": "49e9d9d5139e4dbca380138dad8d0bc16ccbab55c5bd5955e2eef1823d7d528b",
+          "docs/DATA_PARSE_CONTRACT.md": "e2169d0351bc6d62a361a0eafcb6190c785f6c3f80472552cf5a528cbc276309",
+          "docs/DATA_HANDOFF_CONTRACT.md": "c9cac0369881fe0dd474247bb78127f554a8c40af7170e40371b1f03c8c77c1c",
+          "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
+          "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
+          "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
+          "docs/data_contract/codebook.json": "8355654d7702e63743c953f4ea043fdc8ab57d9f629444e2e709cb13e38702a9",
+          "docs/data_contract/policy_snapshot.json": "da149ba2ca6ba45a529c7e73e50a3761309cf3dbca63ab5de8a20020e0b6b9ad",
+          "docs/data_contract/assertion_index.json": "4b3e7c8cf953e75278b563e1aead83388a936cbac6d6eaab3fe0c286a05cd73c"
+        },
+        "binding_status": "explicitly_bound_reviewed_implementation",
+        "binding_policy": "All nulls fail closed. Final reviewed hashes must be written explicitly; runner never substitutes or refreshes them.",
+        "binding_utc": "2026-10-11T16:09:39.775535+00:00",
+        "binding_authority": "User authorized 2026-10-12 project cleanup, modeling handoff, and GitHub update; root explicitly binds documentation reconciliation only.",
+        "binding_revision": 4,
+        "binding_revision_reason": "Only two contract documents and assertion-index provenance pointers updated to current acceptance/handoff after obsolete process drafts removed. No policy, source, test assertions, or sealed package bytes changed. R3 hashes and binding preserved in prior_binding; no runner auto-rebaseline.",
+        "prior_binding": {
+          "revision": 3,
+          "binding_utc": "2026-10-11T12:26:53.509045+00:00",
+          "baseline_sha256": "854e7679c5f804dcd118b1a72fc2617a24abb5a582f0fca954dae449e1972e5c",
+          "implementation_sha256": {
+            "config.py": "3f592140e54186601e6d3b28d33365e8c460ea541860076c07bbadd3714795a8",
+            "src/steam_parse.py": "91fb30ef21fe5172982b30d98767ec940a86fad97b6066d5d58fa52608982d31",
+            "src/steam_handoff.py": "d1c509d6a70196781387bf0f524e17e185e8083fe46da6111337fda68f3d51db",
+            "scripts/run_data_contract_tests.py": "322da367b7d20fd6f203075ac8a3d684e1995a9a9a218bbf57fd855f1fd2ec7d",
+            "tests/test_design_contract.py": "1a46b31bc61263098d3fa1de1c0629449a47517250148c7df2e4f2a24dae3ff8",
+            "tests/v12/test_parse.py": "75c58246d554f82be0ef65f3652ad2eba7bca870566bc5f6fc613b5dce774be6",
+            "tests/v12/test_handoff.py": "49e9d9d5139e4dbca380138dad8d0bc16ccbab55c5bd5955e2eef1823d7d528b",
+            "docs/DATA_PARSE_CONTRACT.md": "47587704228c679eae413f39f72e0b27e7150b212c84bc76b6590fc12d130fc9",
+            "docs/DATA_HANDOFF_CONTRACT.md": "8f8202f42c9fb9a078f84cbc50258231fdc8e3feae1847c6eca985703420400c",
+            "docs/data_contract/handoff_schema.json": "b4e5242e1be9adbdd6eec4a7d14b6d47191c44abe1bc020af0b46337f4a11775",
+            "docs/data_contract/field_dictionary.csv": "f583fcd2872f52c06bc7c6dcb1f2fedd7b37ce7d96330c7deae74a23f21a63c0",
+            "docs/data_contract/source_map.csv": "f7922bc0ac0e35a7aca0ca2978b19c739132833221a003b720c2e4a96731daad",
+            "docs/data_contract/codebook.json": "8355654d7702e63743c953f4ea043fdc8ab57d9f629444e2e709cb13e38702a9",
+            "docs/data_contract/policy_snapshot.json": "da149ba2ca6ba45a529c7e73e50a3761309cf3dbca63ab5de8a20020e0b6b9ad",
+            "docs/data_contract/assertion_index.json": "5332268e2fd24db14942648d060d003ace77911b90376b78066a5048764aa765"
+          },
+          "legacy_sha256": {
+            "scripts/stage0_precheck.py": "17791770d9d3f0f4fb0a6fe3774e7a5816b88f8b4d86f28b5e2bf81f465a9dd6",
+            "tests/fixtures/stage0_boundary_cases.json": "18d36645b87837f2614c6809dbf30b380ea6b686a944d19f572d7ffc9dfb5968",
+            "tests/test_stage0_precheck.py": "786fbd9b309ee1587832921824d215fc84abfd62ef83adbc02f36b313278ea2a",
+            "tests/fixtures/legacy_v11/config.py": "63991ed1e5033d0f5e885f4747c6b95339e0fbeb4f53cefb878ab11571eeb91e"
+          }
+        }
+      }
     }
   }
 }

@@ -45,11 +45,15 @@ x_entity_states含appid、五序列态与source_missing_classes（严格JSON对�
 
 标量唯一缺失哨兵为反斜杠N；真实值包括数组元素若恰为哨兵，阻断并升合同版本，不就地转义。读CSV先dtype=str/keep_default_na=False/na_values仅哨兵，再按字典显式转换；缺失/非法/合法0不可吸收，禁静默coerce/默认填充。JSON文件直接严格JSON解码。float64以可往返十进制输出（如Python repr），存储往返精确；独立公式核算绝对误差容许1e-12并记录实值，不用于放宽键/整数/标签判据。
 
+CSV读取使用与原始输入相同的`csv_field_limit()`，完整迭代期间提升字段上限并在正常/异常退出时恢复，不以默认131,072字符截断或拒绝长字面值。消费者appid复用`parse_appid()`核验精确量级，同时要求解析结果等于已交付的规范字符串；保留长前导零，非规范空白键仍拒绝，不修改全局整数转换限制。
+
+合同JSON、候选JSON及封存manifest/report/READY/schema均显式以UTF-8读取，不依赖操作系统默认编码；打包及EDA入口采用相同读法。非UTF-8默认locale不得把合法交接字节误判为校验失败。
+
 ## 主去向、cohort与全行对账
 
 主表源记录恰一个source_file/source_row_no身份，keys_meta与row_disposition身份相等。主disposition依config顺序取首命中：invalid_key、invalid_date_nat、excluded_2019、uncovered_year、invalid_label_input、train、validation、test；全部命中原因另存failure_codes，年份/日期/ratings诊断计数与主去向计数分别记录。无更高优先级才取各类去向。bad key不参加appid/raw_appid join，但必须以记录身份参与诊断对账。
 
-keys_meta.split仅从主disposition映射：train/validation/test同值，excluded_2019→excluded，其余invalid_key/invalid_date_nat/uncovered_year/invalid_label_input→unknown；codebook.split_by_disposition逐字相同。敏感性接口默认OFF，其source_defined列是未启用接口槽位；若以后开启，须先形成具体来源/类型/缺失/转换schema再验收，不得以占位类型判通过。
+keys_meta.split仅从主disposition映射：train/validation/test同值，excluded_2019→excluded，其余invalid_key/invalid_date_nat/uncovered_year/invalid_label_input→unknown；codebook.split_by_disposition逐字相同。制作门禁按每条源身份将keys_meta.disposition和split逐条绑定到独立重算的主去向；元数据内部自洽或全局计数相同不能替代这一核对。敏感性接口默认OFF，其source_defined列是未启用接口槽位；若以后开启，须先形成具体来源/类型/缺失/转换schema再验收，不得以占位类型判通过。
 
 rows_excluded与rows_invalid_unknown由主disposition过滤，零行仍保留表头；四invalid/unknown类各自守恒。排除年/NaT/未知年不在X/y、不交付标签，原值/记录不丢。X/y/态旁表在开发域键集相等，join按appid，载荷各按自身schema，不要求X/y所有字段相等。
 

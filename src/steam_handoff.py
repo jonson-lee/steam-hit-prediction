@@ -24,7 +24,7 @@ import sys
 import numpy as np
 import pandas as pd
 import config
-from src.steam_parse import (audit_keys, literal_csv, parse_age, parse_appid,
+from src.steam_parse import (audit_keys, csv_field_limit, literal_csv, parse_age, parse_appid,
     parse_date, parse_english, parse_rating, parse_ratings, parse_sequence,
     sequence_features)
 
@@ -80,7 +80,7 @@ def key_digest(keys):
 
 
 def _load_spec():
-    schema = strict_json_loads((SPEC_DIR / "handoff_schema.json").read_text())
+    schema = strict_json_loads((SPEC_DIR / "handoff_schema.json").read_text(encoding="utf-8"))
     with (SPEC_DIR / "field_dictionary.csv").open(newline="", encoding="utf-8") as stream:
         dictionary = list(csv.DictReader(stream))
     return schema, {(x["file"], x["column"]): x for x in dictionary}
@@ -184,7 +184,7 @@ def read_table(path, columns, definitions, logical_path):
     raw = Path(path).read_bytes()
     if raw.startswith(b"\xef\xbb\xbf"):
         raise ValueError("CSV_BOM")
-    with Path(path).open(encoding="utf-8", newline="") as stream:
+    with Path(path).open(encoding="utf-8", newline="") as stream, csv_field_limit():
         reader = csv.reader(stream, strict=True)
         if next(reader, None) != columns:
             raise ValueError("SCHEMA_COLUMNS")
@@ -305,7 +305,7 @@ def build_dataset(main_rows, auxiliary_rows=None):
             developed_cohort_n=0, developed_positive_n=0 if computable else None,
             in_developed_domain=year <= config.TRAIN_MAX_YEAR or year in (config.VALIDATION_YEAR, config.TEST_YEAR),
             algorithm_id="within_year_quantile_linear_inclusive", parameter_ref="config.target")
-    codebook = strict_json_loads((SPEC_DIR / "codebook.json").read_text())
+    codebook = strict_json_loads((SPEC_DIR / "codebook.json").read_text(encoding="utf-8"))
     for r in parsed_rows:
         i, raw, year = r["identity"], r["raw"], r["year"]
         predicates = {"invalid_key": not r["key"].valid, "invalid_date_nat": year is None,
@@ -416,6 +416,9 @@ def validate_dataset(data):
     tables = data.tables
     x, y, meta = tables["handoff/x_primary.csv"], tables["handoff/y_label.csv"], tables["handoff/keys_meta.csv"]
     dispositions, states = tables["handoff/row_disposition.csv"], tables["handoff/x_entity_states.csv"]
+    if any(type(r["source_row_no"]) is not int
+           or not 1 <= r["source_row_no"] <= len(data.raw_main) for r in meta):
+        raise ValueError("SOURCE_IDENTITY: source_row_no outside main source range")
     xm, ym, mm = {r["appid"]: r for r in x}, {r["appid"]: r for r in y}, {r["appid"]: r for r in meta if r["split"] in ("train", "validation", "test")}
     expected, expected_labels, dates, totals = _expected_label_info(data.raw_main)
     identities = [(r["source_file"], r["source_row_no"]) for r in meta]
@@ -431,7 +434,7 @@ def validate_dataset(data):
     counts = Counter(r["disposition"] for r in dispositions)
     add("H05-KEY-04", sum(counts.values())==len(data.raw_main) and len(dispositions)==len(data.raw_main), dict(source_records=len(data.raw_main), dispositions=dict(counts)))
     precedence = list(config.DATA_HANDOFF_POLICY["row_disposition_precedence"])
-    codebook = strict_json_loads((SPEC_DIR/"codebook.json").read_text())
+    codebook = strict_json_loads((SPEC_DIR/"codebook.json").read_text(encoding="utf-8"))
     disposition_by_id = {r["source_row_no"]:r for r in dispositions}
     expected_dispositions = {}
     for i, raw in enumerate(data.raw_main,1):
@@ -442,7 +445,11 @@ def validate_dataset(data):
             year in expected and i not in expected_labels,
             year is not None and year<=config.TRAIN_MAX_YEAR, year==config.VALIDATION_YEAR, year==config.TEST_YEAR]
         expected_dispositions[i] = next(name for name, match in zip(precedence,conditions) if match)
-    add("H05-KEY-05", precedence==codebook["dispositions"] and all(disposition_by_id.get(i,{}).get("disposition")==v for i,v in expected_dispositions.items()) and all(r["split"]==codebook["split_by_disposition"][r["disposition"]] for r in meta), dict(precedence=precedence, source_records_checked=len(expected_dispositions)))
+    metadata_disposition_ok = all(
+        r["disposition"] == expected_dispositions.get(r["source_row_no"])
+        and r["split"] == codebook["split_by_disposition"].get(expected_dispositions.get(r["source_row_no"]))
+        for r in meta)
+    add("H05-KEY-05", precedence==codebook["dispositions"] and all(disposition_by_id.get(i,{}).get("disposition")==v for i,v in expected_dispositions.items()) and metadata_disposition_ok, dict(precedence=precedence, source_records_checked=len(expected_dispositions), metadata_source_dispositions_match=metadata_disposition_ok))
     add("H05-KEY-06", set(xm)==set(ym)==set(mm)=={r["appid"] for r in states}, dict(X=len(x),y=len(y),states=len(states)))
     excluded=[r for r in dispositions if r["disposition"]=="excluded_2019"]
     invalid=[r for r in dispositions if r["disposition"] in ("invalid_key","invalid_date_nat","uncovered_year","invalid_label_input")]
@@ -638,7 +645,7 @@ def _stable_material(data, inputs):
     with (SPEC_DIR/"source_map.csv").open(newline="",encoding="utf-8") as stream:
         tables["manifest/source_map.csv"]=sorted((r for r in csv.DictReader(stream) if r["file"] in enabled),key=lambda r:(r["file"],r["column"]))
     objects={"handoff/history_windows.json":deepcopy(data.history_windows),
-        "manifest/codebook.json":strict_json_loads((SPEC_DIR/"codebook.json").read_text()),
+        "manifest/codebook.json":strict_json_loads((SPEC_DIR/"codebook.json").read_text(encoding="utf-8")),
         "manifest/design_contract_snapshot.json":dict(design=config.design_contract(),data_policies=config.data_policy_contract(),config_sha256=file_hash(ROOT/"config.py")),
         "manifest/handoff_schema.json":schema}
     documents={"manifest/parse_contract.md":(ROOT/"docs/DATA_PARSE_CONTRACT.md").read_bytes(),
@@ -708,7 +715,7 @@ def ready_binding(manifest_hash, report_hash, report):
 
 
 def _report_only(run, checks, error, scope):
-    ids=[x["id"] for x in strict_json_loads((SPEC_DIR/"assertion_index.json").read_text())["H05"]]
+    ids=[x["id"] for x in strict_json_loads((SPEC_DIR/"assertion_index.json").read_text(encoding="utf-8"))["H05"]]
     for identifier in ids:
         checks.setdefault(identifier,dict(status="BLOCKED",evidence=dict(reason="earlier build/serialization blocked; not executed")))
     checks["H05-GATE-01"]=dict(status="PASS",evidence=dict(overall="blocked",READY_written=False))
@@ -749,7 +756,7 @@ STEP1 protection snapshot. This task's acceptance calls synthetic scope only.
     try:
         _write_material(candidate,schema,definitions,tables,objects,documents)
         decoded={p:read_table(candidate/p,schema["files"][p]["columns"],definitions,p) for p in tables}
-        json_objects={p:strict_json_loads((candidate/p).read_text()) for p in objects}
+        json_objects={p:strict_json_loads((candidate/p).read_text(encoding="utf-8")) for p in objects}
     except (ValueError,TypeError,OverflowError,csv.Error) as exc:
         return _report_only(run,checks,str(exc),scope)
     roundtrip={p:strict_json_loads(json_text(decoded[p]))==strict_json_loads(json_text(rows)) for p,rows in tables.items()}
@@ -825,7 +832,7 @@ STEP1 protection snapshot. This task's acceptance calls synthetic scope only.
     legacy_actual={p:file_hash(ROOT/p) for p in legacy_expected}
     add("H05-GATE-08",legacy_actual==legacy_expected,dict(external_actions=[],H04_changed=legacy_actual!=legacy_expected,legacy_sha256=legacy_actual,H04_exit4_semantics="no data blockers but open policy/implementation items"))
     add("H05-GATE-01",not (run/"manifest/HANDOFF_READY.json").exists(),dict(READY_not_written_before_gate=True,scope=scope))
-    all_ids={r["id"] for r in strict_json_loads((SPEC_DIR/"assertion_index.json").read_text())["H05"]}
+    all_ids={r["id"] for r in strict_json_loads((SPEC_DIR/"assertion_index.json").read_text(encoding="utf-8"))["H05"]}
     if set(checks)!=all_ids:raise RuntimeError("H05 checker coverage gap: "+str(sorted(all_ids-set(checks))))
     overall="pass" if all(c["status"] in ("PASS","NOT_APPLICABLE") for c in checks.values()) else "fail"
     report=dict(scope=scope,overall=overall,checks=checks,manifest_sha256=manifest_sha,
@@ -849,10 +856,10 @@ synthetic package. Its result cannot be called formal acceptance.
     try:
         if require_real and marker is not None:
             raise ValueError("Virtual marker is synthetic-component only")
-        manifest=strict_json_loads((directory/"manifest/manifest.json").read_text())
-        report=strict_json_loads((directory/"manifest/validation_report.json").read_text())
-        ready=marker if marker is not None else strict_json_loads((directory/"manifest/HANDOFF_READY.json").read_text())
-        schema=strict_json_loads((directory/"manifest/handoff_schema.json").read_text())
+        manifest=strict_json_loads((directory/"manifest/manifest.json").read_text(encoding="utf-8"))
+        report=strict_json_loads((directory/"manifest/validation_report.json").read_text(encoding="utf-8"))
+        ready=marker if marker is not None else strict_json_loads((directory/"manifest/HANDOFF_READY.json").read_text(encoding="utf-8"))
+        schema=strict_json_loads((directory/"manifest/handoff_schema.json").read_text(encoding="utf-8"))
         required={p for p,v in schema["files"].items() if v["requiredness"] in ("required","conditional_required")}
         inventory=set(manifest["files"])
         safe_paths=all(not Path(p).is_absolute() and ".." not in Path(p).parts and Path(p).parts[0] in ("handoff","manifest") for p in inventory)

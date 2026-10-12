@@ -2,6 +2,27 @@
 
 All material project updates are recorded here. Raw third-party datasets are not committed.
 
+## 2026-10-12 — 中英文元数据交接与审阅更新（R7）
+
+- 私下交接新增五页中英文查阅表，覆盖12张CSV的117个文件字段定义、84个不同列名、21个文件用途、常见缩写/状态、61个列表词条和重要JSON键。中文说明保留机器列名、类别身份和政策原义。
+- 打包白名单明确纳入工作簿，新增`bilingual` ZIP并保留前三版；表格位于封存包外，不参与READY。数据、工作簿、ZIP、原始验收证据及内部记录保持本地，GitHub只同步代码、测试和说明。
+- 审阅发现候选源行号越界会绕过阻断报告；新增索引前的严格整数/范围检查和六种非法值回归，复用已有诊断路径。R7仅显式更新实现/测试2项绑定，完整保留R6/R5/R4/R3历史，配置及封存21文件不变。
+- 本次仓库更新汇总R5/R6/R7修复及交接文档；合成157/157、旧H04 11/11、独立loader 15/15通过。交接ZIP另校验CRC、逐文件SHA和无Git的独立解压读入；未启动模型训练、调参或评估。
+
+## 2026-10-12 — Fix UTF-8 consumption and metadata disposition gates (R6)
+
+- Read handoff JSON explicitly as UTF-8 across production, verification, packaging and EDA. A non-UTF-8 operating-system default no longer rejects valid package bytes.
+- Bind each metadata disposition and split to the independently rebuilt source disposition. Incorrect cohort metadata now blocks production even when its fields agree with each other or aggregate counts stay unchanged.
+- Add two contract and two independent loader regressions, including GBK-default Unicode reads and five incorrect-disposition cases. Contract tests passed 156/156, frozen H04 11/11 and loader tests 15/15; isolated old-code comparisons detect both defects.
+- Explicit R6 changes three reviewed source/test/contract bindings and retains the complete R5/R4/R3 history. Config, schema, six inputs and all 21 sealed files remain unchanged. A new local `handoff_fix` ZIP preserves both earlier deliveries. No modeling was performed.
+
+## 2026-10-12 — Fix reader boundaries (R5)
+
+- Reuse the adopted app-ID parser in the modeling loader, preserving long leading-zero keys while rejecting noncanonical, Unicode and out-of-range keys.
+- Share a scoped CSV field limit across raw and handoff readers. Long text and JSON cells survive round-trip; normal and failed reads restore the caller's process setting.
+- Add six regression cases. Contract tests passed 154/154, frozen H04 11/11 and independent loader tests 13/13. Explicit R5 bindings update six reviewed source/test/contract hashes and preserve the complete R4/R3 history; no runner auto-rebaseline.
+- Config, schema, raw inputs and all 21 sealed files are unchanged. A new local `reader_fix` ZIP carries the repaired reader; the original delivery remains preserved. No modeling was performed.
+
 ## 2026-10-12 — Complete v1.2 data handoff and prepare modeling delivery
 
 - Completed the adopted v1.2 parsing/handoff implementation with unchanged v1.1 business rules: inclusive yearly linear-q90 target, chronological train/validation/test, 2019 exclusion, strict feature whitelist and prior-year multi-entity history.

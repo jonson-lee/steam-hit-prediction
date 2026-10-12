@@ -61,6 +61,14 @@ class ModelingLoaderTests(unittest.TestCase):
             "checks": {"stable_hashes": True},
         })
 
+    def non_utf8_default(self):
+        read_text = Path.read_text
+
+        def simulated_read(path, encoding=None, errors=None):
+            return read_text(path, encoding="gbk" if encoding is None else encoding, errors=errors)
+
+        return mock.patch.object(Path, "read_text", simulated_read)
+
     def table(self, name):
         logical = f"handoff/{name}.csv"
         return handoff.read_table(self.package / logical, self.schema["files"][logical]["columns"],
@@ -84,6 +92,37 @@ class ModelingLoaderTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "stable_hashes"):
                 loader.load_modeling_data(self.package)
             reader.assert_not_called()
+
+    def test_utf8_synthetic_production_and_consumer_verifier_ignore_default_locale(self):
+        protected = Path(self.temp.name) / "protected"
+        protected.mkdir()
+        (protected / "交接说明文🚀.txt").write_text("Synthetic protected artifact", encoding="utf-8")
+        rows = [source_row("001", 2016, name="合成游戏🚀", developer="厂商甲"),
+                source_row("13", 2017), source_row("14", 2018)]
+        with self.non_utf8_default():
+            receipt = handoff.write_package(handoff.build_dataset(rows), self.temp.name,
+                                            protected_paths={"synthetic_prior": protected})
+            self.assertEqual(receipt["report"]["overall"], "pass")
+            directory = receipt["directory"]
+            marker = {"manifest_sha256": handoff.file_hash(directory / "manifest/manifest.json"),
+                      "report_sha256": handoff.file_hash(directory / "manifest/validation_report.json")}
+            verification = handoff.verify_package(directory, require_real=False, marker=marker)
+        self.assertEqual(verification["overall"], "pass")
+        self.assertEqual(len(verification["checks"]), 7)
+        self.assertTrue(all(verification["checks"].values()))
+        self.assertFalse(verification["accepted_for_formal_handoff"])
+        self.assertFalse((directory / "manifest/HANDOFF_READY.json").exists())
+
+    def test_unicode_modeling_metadata_and_sequences_ignore_default_locale(self):
+        rows = [source_row("001", 2016, name="合成游戏🚀", developer="厂商甲"),
+                source_row("13", 2017), source_row("14", 2018)]
+        receipt = handoff.write_package(handoff.build_dataset(rows), self.temp.name)
+        self.assertEqual(receipt["report"]["overall"], "pass")
+        with self.non_utf8_default(), self.accepted_verifier():
+            data = loader.load_modeling_data(receipt["directory"])
+        self.assertEqual(data["train"]["metadata"].loc["001", "name"], "合成游戏🚀")
+        self.assertEqual(data["train"]["X"].loc["001", "developer"], ["厂商甲"])
+        self.assertEqual(data["train"]["metadata"].loc["001", "raw_parse_values"]["developer"], "厂商甲")
 
     def test_aligned_whitelist_and_exact_wire_types(self):
         with self.accepted_verifier() as verifier:
@@ -114,6 +153,31 @@ class ModelingLoaderTests(unittest.TestCase):
         self.assertEqual(int(train["X"].loc["12", "required_age"]), 9223372036854775807)
         self.assertEqual(str(train["X"].required_age.dtype), "Int64")
         self.assertEqual(train["X"].loc["12", "dev_prior_count"], self.table("x_primary")[1]["dev_prior_count"])
+
+    def test_long_zero_prefixed_appid_and_int64_boundary_remain_string_keys(self):
+        long_key = "0" * 5000 + "12"
+        maximum_key = "9223372036854775807"
+        rows = [source_row(long_key, 2015), source_row("12", 2016),
+                source_row(maximum_key, 2016), source_row("13", 2017),
+                source_row("14", 2018)]
+        receipt = handoff.write_package(handoff.build_dataset(rows), self.temp.name,
+                                        scope="synthetic")
+        self.assertEqual(receipt["report"]["overall"], "pass")
+        with self.accepted_verifier():
+            data = loader.load_modeling_data(receipt["directory"])
+        expected_keys = [long_key, "12", maximum_key]
+        for frame in data["train"].values():
+            self.assertEqual(frame.index.tolist(), expected_keys)
+
+    def test_noncanonical_invalid_and_overflow_appids_are_rejected(self):
+        original = self.table("x_primary")
+        for key in (" 001 ", "１２", "9223372036854775808", "9" * 5000):
+            with self.subTest(key=key[:30]):
+                rows = deepcopy(original)
+                rows[0]["appid"] = key
+                self.rewrite("x_primary", rows)
+                with self.accepted_verifier(), self.assertRaisesRegex(ValueError, "Invalid string appid in X"):
+                    loader.load_modeling_data(self.package)
 
     def test_reorders_each_table_by_appid_without_misalignment(self):
         with self.accepted_verifier():

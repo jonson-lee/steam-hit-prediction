@@ -8,14 +8,43 @@ source missing values retain a separate class.  Historical H04 code is untouched
 from __future__ import annotations
 
 import csv
+from contextlib import contextmanager
 from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 import re
+import sys
+from threading import RLock
 from typing import Iterable, Mapping
 import unicodedata
 
 import config
+
+
+_CSV_FIELD_LIMIT_LOCK = RLock()
+
+
+@contextmanager
+def csv_field_limit():
+    """Read long literal fields without retaining a process-wide CSV setting.
+
+    The contract has no 128-KiB text limit. Use the platform's accepted integer
+    bound; older CSV runtimes may require a smaller C integer than sys.maxsize.
+    Serialize project readers because csv.field_size_limit is process-wide.
+    """
+    with _CSV_FIELD_LIMIT_LOCK:
+        previous = csv.field_size_limit()
+        limit = sys.maxsize
+        try:
+            while True:
+                try:
+                    csv.field_size_limit(max(previous, limit))
+                    break
+                except OverflowError:
+                    limit //= 2
+            yield
+        finally:
+            csv.field_size_limit(previous)
 
 
 @dataclass(frozen=True)
@@ -262,7 +291,7 @@ def audit_keys(rows: Iterable[Mapping[str, str]], key_column: str = "appid") -> 
 
 def literal_csv(path: str | Path) -> list[dict[str, str]]:
     """Read UTF-8 CSV records as strings, rejecting malformed table shape."""
-    with Path(path).open("r", encoding="utf-8", newline="") as stream:
+    with Path(path).open("r", encoding="utf-8", newline="") as stream, csv_field_limit():
         reader = csv.reader(stream, strict=True)
         try:
             header = next(reader)
