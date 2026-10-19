@@ -73,4 +73,4 @@ EDA复现另需六张原始CSV，原始数据不随默认交接ZIP提供。新�
 | 原始数据来源与许可 | [data/README](data/README.md) |
 | 商业问题和建模计划 | [项目提案](Project_Proposal_Steam_Game_Success.md) |
 
-数据来源：Nik Davis的[Steam Store Games](https://www.kaggle.com/datasets/nikdavis/steam-store-games)，来源元数据标注CC BY 4.0。小组成员姓名、学号和本机配置不进入公开版本。
+数据来源：Nik Davis的[Steam Store Games](https://www.kaggle.com/datasets/nikdavis/steam-store-games)
