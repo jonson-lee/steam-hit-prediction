@@ -1,8 +1,10 @@
-# Steam Game Hit Prediction | Steam 游戏爆款预测
+# Steam Publishing Decision Support | Steam 游戏发行决策支持
 
-IBA6102 Machine Learning for Business 小组项目：用游戏属性和厂商历史进行候选游戏筛选与排序。**数据阶段已完成，建模尚未启动。** 当前政策为v1.2，业务规则保持2026-09-24会议冻结v1.1。
+IBA6102 Machine Learning for Business 小组项目帮助中小发行商筛选候选游戏，分配有限的人工尽调名额。**数据阶段已完成，原编码建模结果和 2018 年逐游戏榜单已核对，可以开始制作尽调名单和评审卡。** 当前政策为 v1.2，业务规则保持 2026-09-24 会议冻结的 v1.1。
 
-建模同学先读[交接指南](docs/MODELING_HANDOFF.md)，项目展示先读[EDA摘要](docs/EDA_SUMMARY.md)，本次更新见[CHANGELOG](CHANGELOG.md)。GitHub保存实现、测试和标准文档；正式数据、验收原始证据与展示图表由微信交接ZIP提供。
+2026-10-19教师反馈强调商业决策与应用，模型保持足够完整度。当前工作主线为“候选排序 → 项目评审卡 → 人工尽调”，以相同Top10%评审容量下的命中数、漏选情况和相对简单规则的提升解释价值；具体签约、定价和投资金额仍需额外商业信息。完整应用方案见[项目提案](Project_Proposal_Steam_Game_Success.md)。
+
+建模同学先读[交接指南](docs/MODELING_HANDOFF.md)，数据展示参考[EDA摘要](docs/EDA_SUMMARY.md)，本次更新见[CHANGELOG](CHANGELOG.md)。GitHub保存实现、测试和标准文档；正式数据、验收原始证据与展示图表由微信交接ZIP提供。
 
 ## 文件结构
 
@@ -14,6 +16,7 @@ tests/                         当前测试及冻结的历史基线
 docs/                          建模交接、标准、字段字典和验收摘要
 data/processed/                正式封存数据和验收证据（仅私下交接）
 reports/eda/                   展示报告、21张表和5对PNG/SVG（仅私下交接）
+reports/modeling_received/     组员提交的报告、Notebook和逐游戏榜单（仅本地）
 deliverables/                  发给建模同学的完整ZIP（仅本地）
 outputs/                       以后复现运行的新UTC目录（仅本地）
 Project_Proposal_Steam_Game_Success.md  商业问题与方法计划
@@ -45,7 +48,13 @@ python -B -m scripts.load_modeling_data
 - X仅24项白名单。appid、split、日期/年份元数据、标签及审计字段不作为预测变量；ratings、owners、playtime、SteamSpy tags/tag_count禁止进入X。price、achievements和辅助快照仅属后续敏感性分析。
 - 学习型填补、词表、one-/multi-hot、标准化仅在训练历史fit；参数和阈值在validation选择。报告AP/PR-AUC、ROC-AUC及Top10% precision/recall/lift，单独报告未见厂商表现。
 
-2018的描述性分布与标签人口已查看，须在后续记录中披露。2019单次快照支持回顾性筛选，不能证明真实发售前信息齐备，也不建立销量、因果效果或ROI结论。
+## 建模审阅进展
+
+2026-11-09 整理了组员报告及三份 Notebook，归档于本地 `reports/modeling_received/2026-11-07/`。两份原编码 Notebook 的主要结果已对照源码和保存输出核对。2026-11-10 收到 2018 年逐游戏榜单与混淆矩阵，归档于本地 `reports/modeling_received/2026-11-10/`。8,160 个 `appid`、真实标签和冷启动标记均与正式数据对齐。工程版复现材料继续并行收集。
+
+现有比较按2017年验证集AP选模，原编码逻辑回归（LR）的AP为0.5298。2018年已查看EDA及多轮模型结果，定位为探索性复核。在相同816个名额下，LR命中426款，同窗口历史规则期望命中355.24款。2019年单次快照支持回顾性筛选，真实发售前的字段可得性及业务收益需另行验证。
+
+下一阶段先生成两份 Top 816 尽调名单和对照，再制作入选命中、漏选及冷启动评审卡和一页人工复核流程。历史规则的具体名单按基准同分名次、再按字符串 `appid` 升序确定，命中 383 款。名单及案例使用确定口径，整体效果使用并列期望口径。详见[交付优先级](Project_Proposal_Steam_Game_Success.md#7-接下来的交付优先级)。
 
 ## 验收与复现
 

@@ -31,7 +31,7 @@ The historical pandas-default-NA audit found complete unique app IDs, no exact d
 
 ## Modeling contract
 
-Current policy: **v1.2 (B05 parsing/handoff adopted 2026-10-11)**; the business design remains **v1.1 (2026-09-24 meeting)**, adopted on 2026-10-09. Production implementation, real-file acceptance, physical READY and independent consumer verification are complete; modeling has not started. See [parse contract](../docs/DATA_PARSE_CONTRACT.md) and [handoff contract](../docs/DATA_HANDOFF_CONTRACT.md). The authoritative decisions are in [docs/DECISIONS.md](../docs/DECISIONS.md); executable policy is in [config.py](../config.py).
+Current data policy is **v1.2**, adopted on 2026-10-11. The business design is **v1.1**, adopted from the 2026-09-24 meeting. Production implementation, real-file acceptance, physical READY and independent consumer verification are complete. The 2018 per-game ranking has been checked against the sealed cohort and labels. Prior viewing of EDA and model results makes 2018 an exploratory review. See the [parse contract](../docs/DATA_PARSE_CONTRACT.md), [handoff contract](../docs/DATA_HANDOFF_CONTRACT.md), [decision log](../docs/DECISIONS.md) and [executable policy](../config.py).
 
 Use releases through 2018 only. The 2019 cohort is incomplete.
 
